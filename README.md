@@ -1,1 +1,1 @@
-[Here's the link to my Portfolio]("https://deepankarkotnala.github.io/")
+Here's the [link](https://deepankarkotnala.github.io/) to my Portfolio
