@@ -2,9 +2,9 @@
 
 ### Important things on my website:
 
-#### Articles
-#### Portfolio
-#### Contact Information
+* Articles
+* Portfolio
+* Contact Information
 
 Best viewed on a tablet, laptop or desktop.
 
