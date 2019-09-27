@@ -1,4 +1,4 @@
-### Visit [https://deepankarkotnala.github.io](https://deepankarkotnala.github.io/) to have a look at my professional website.
+### Visit [https://deepankarkotnala.github.io](https://deepankarkotnala.github.io/ target="_blank") to have a look at my professional website.
 
 ### Important things on my website:
 
