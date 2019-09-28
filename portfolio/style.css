@@ -4,7 +4,8 @@ body {
     --color-text-subtle: #00FA9A;
 
     padding: 0; margin: 0;
-    background: #05386b;
+    --background: #05386b;
+	background: linear-gradient(45deg, rgba(209, 0, 42, 0.6) 0%, #0E5DC4 100%);
     width: 100%;
     min-height: 100vh;
     display: flex;
