@@ -65,11 +65,11 @@ a, a:hover {
 }
 
 .news-slider {
-  z-index: 2;
-  max-width: 1300px;
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 60px;
+   z-index: 2;
+    max-width: 1300px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 60px;
 }
 @media screen and (max-width: 1300px) {
   .news-slider {
@@ -79,6 +79,7 @@ a, a:hover {
 @media screen and (max-width: 576px) {
   .news-slider {
     margin-top: 45px;
+	margin-bottom: 45px;
   }
 }
 .news-slider__wrp {
@@ -171,6 +172,12 @@ a, a:hover {
   border-radius: 10px;
   display: block;
   transition: all .3s;
+  
+  width: 20rem;
+      height: 32rem;
+      flex-shrink: 0;
+      padding: 15px;
+	  
 }
 @media screen and (min-width: 800px) {
   .news__item:hover {
