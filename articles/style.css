@@ -66,7 +66,7 @@ a, a:hover {
 
 .news-slider {
    z-index: 2;
-    max-width: 1300px;
+    max-width: 50rem;
     margin-left: auto;
     margin-right: auto;
     margin-top: 60px;
@@ -167,16 +167,17 @@ a, a:hover {
   }
 }
 .news__item {
-  padding: 40px;
+  padding: 2rem;
+
   color: #fff;
   border-radius: 10px;
   display: block;
   transition: all .3s;
   
   width: 20rem;
-      height: 32rem;
-      flex-shrink: 0;
-      padding: 15px;
+  height: 32rem;
+  flex-shrink: 0;
+      
 	  
 }
 @media screen and (min-width: 800px) {
