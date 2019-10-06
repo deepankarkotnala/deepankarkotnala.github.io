@@ -123,14 +123,12 @@ body {
   border: none;
   color: #FFFFFF;
   text-align: center;
-  font-size: 15px;
-  font-family: monospace;
+  font-size: 12px;
   padding: 0px;
-  width: 150px;
+  width: 170px;
   transition: all 0.5s;
   cursor: pointer;
-  margin: 5px;
-
+  margin: 3px;
 }
 
 .button span {
@@ -180,3 +178,36 @@ body {
 }
 .a1:hover { color:#FFFF00;
 }
+
+
+.btn {
+  text-decoration: none;
+  border: 1px solid rgb(146, 148, 248);
+  position: relative;
+  overflow: hidden;
+}
+
+
+
+.btn:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(146, 248, 248, 0.4),
+    transparent
+  );
+  transition: all 650ms;
+}
+
+.btn:hover:before {
+  left: 100%;
+}
+
+
+
