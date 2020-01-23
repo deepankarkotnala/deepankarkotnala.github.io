@@ -5084,7 +5084,7 @@ Created using IcoMoon - icomoon.io
 }
 
 .section {
-  padding: 70px 0;
+  padding: 50px 0;
   position: relative;
   background: #FFFFFF;
 }
@@ -7025,9 +7025,12 @@ Created using IcoMoon - icomoon.io
   /* For Safari 5.1 to 6.0 */
   /* For Opera 11.1 to 12.0 */
   /* For Firefox 3.6 to 15 */
-  background: -webkit-gradient(linear, left bottom, left top, from(rgba(44, 44, 44, 0.2)), to(rgba(55, 140, 63, 0.6)));
-  background: linear-gradient(0deg, rgba(44, 44, 44, 0.2), rgba(55, 140, 63, 0.6));
+  /*background: -webkit-gradient(linear, left bottom, left top, from(rgba(44, 44, 44, 0.2)), to(rgba(55, 140, 63, 0.6)));*/
+  /*background: linear-gradient(0deg, rgba(44, 44, 44, 0.2), rgba(55, 140, 63, 0.6));*/
   /* Standard syntax */
+  background: rgba(44, 44, 44, 0);
+  background: -webkit-gradient(linear, left bottom, left top, from(rgba(44, 44, 44, 0)), to(rgba(55, 69, 140, 0.67)));
+  background: linear-gradient(0deg, rgba(255, 255, 255, 0), rgba(55, 69, 140, 0.67));
 }
 
 .page-header .btn {
@@ -7072,7 +7075,7 @@ Created using IcoMoon - icomoon.io
 
 .cc-profile-image a:before {
   content: "";
-  border: 15px solid rgba(55, 140, 63, 0.6);
+  border: 15px solid rgba(61, 55, 140, 0.6);
   border-radius: 50%;
   height: 180px;
   width: 180px;
