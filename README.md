@@ -1,9 +1,11 @@
 ### Visit [https://deepankarkotnala.github.io](https://deepankarkotnala.github.io/) to have a look at my professional website.
 
-### Important things on my website:
-
+### Contents of my website:
+* Work Experience
+* Educational Details
+* Skills
 * Articles
-* Portfolio
+* Awards and Certifications
 * Contact Information
 
 Best viewed on a tablet, laptop or desktop.
