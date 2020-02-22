@@ -392,12 +392,12 @@
 
 .noUi-handle {
   border-radius: 3px;
-  background: #FFF;
+  background: #fff;
   cursor: default;
-  -webkit-box-shadow: inset 0 0 1px #FFF,
+  -webkit-box-shadow: inset 0 0 1px #fff,
  inset 0 1px 7px #EBEBEB,
  0 3px 6px -3px #BBB;
-          box-shadow: inset 0 0 1px #FFF,
+          box-shadow: inset 0 0 1px #fff,
  inset 0 1px 7px #EBEBEB,
  0 3px 6px -3px #BBB;
   -webkit-transition: 300ms ease 0s;
@@ -1298,7 +1298,7 @@
   border-radius: 0.1875rem;
   padding: 11px 22px;
   cursor: pointer;
-  background-color: #2e5753;
+  background-color: #2e5753s;
   color: #FFFFFF;
 }
 
@@ -7605,11 +7605,10 @@ a {
 
 .btn {
   text-decoration: none;
-  border: 0.5px solid #50b3a8;
+  border: 0.5px solid #3d5d42;
   position: relative;
   overflow: hidden;
 }
-
 
 
 .btn:before {
@@ -7630,8 +7629,11 @@ a {
 
 .btn:hover:before {
   left: 100%;
+  
 }
-
+.btn:hover {
+	border: 0.5px solid #2f847c;
+}
 
 
 .container-1{
@@ -7719,6 +7721,4 @@ a {
      padding:3px 5px 3px 5px;
   }
 }
-
-
 
