@@ -7494,7 +7494,7 @@ a {
 }
 
 .shadow-img2{
-        background-position: bottom;
+    background-position: bottom;
     background-image: url("../img/shadow2.png");
     background-size: 100%;
     background-repeat: no-repeat;
@@ -7634,6 +7634,91 @@ a {
 
 
 
+.container-1{
+	height: 100px;
+	width: 70vw;
+	box-shadow: -7px -7px 17px rgba(255,255,255,0.6),
+				7px 7px 17px rgba(70,70,70,0.15);
+	position: relative;
+	margin: auto;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	border-radius: 10px;
+	display: flex;
+	align-items: center;
+	justify-content: space-around;
+}
+
+
+.container-1>a{
+	height: 60px;
+	width: 60px;
+	box-shadow: -7px -7px 17px rgba(255,255,255,0.6),
+				7px 7px 17px rgba(70,70,70,0.15);
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	text-decoration: none; 
+	font-size: 25px;
+}
+.fa-phone-square{
+	color: #147efb;
+}
+.fa-envelope{
+	color: #dd4b39;
+}
+.fa-instagram{
+	color: #ea3145;
+}
+.fa-whatsapp{
+	color: #27ae60;
+}
+.fa-skype{
+	color: #00aff0;
+}
+.fa-github{
+	color: #333;
+}
+.fa-linkedin{
+	color: #0077b5;
+}
+.fa-medium{
+	color: #005387
+}
+.fa-github{
+	color: #004d73
+}
+
+.container-1>a:active{
+	box-shadow: inset -7px -7px 17px rgba(255,255,255,0.6),
+				inset 7px 7px 17px rgba(70,70,70,0.15);	
+
+}
+.my-link{
+    color: #EA3145;
+    font-family: "Rubik",sans-serif;
+    position:absolute;
+    right:20px ;
+    top:20px;
+    border:2px solid #EA3145;
+    text-decoration:none;
+}
+@media screen and (min-width: 451px) {
+ .my-link{
+    font-size: 18px;
+     padding:5px 10px 5px 10px;
+  }
+}
+
+@media screen and (max-width: 450px) {
+ .my-link{
+    font-size: 14px;
+     padding:3px 5px 3px 5px;
+  }
+}
 
 
 
