@@ -7722,3 +7722,16 @@ a {
   }
 }
 
+
+.b1 {
+  color: #000;
+  font-weight: bold;
+  background-color: #E6E6E6;
+  transition: all 0.2s ease-in-out;
+   font-size: 14px;
+  border-radius: 10px;
+  padding: 16px;
+}
+
+
+
