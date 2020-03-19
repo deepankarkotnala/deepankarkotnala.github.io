@@ -7077,8 +7077,7 @@ Created using IcoMoon - icomoon.io
   width: 180px;
   position: absolute;
   left: 0;
-  -webkit-animation: pulsate 1.6s ease-out;
-          animation: pulsate 1.6s ease-out;
+
   -webkit-animation-iteration-count: infinite;
           animation-iteration-count: infinite;
   opacity: 0.0;
