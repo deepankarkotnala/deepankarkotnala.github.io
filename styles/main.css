@@ -6864,15 +6864,15 @@ Created using IcoMoon - icomoon.io
 }
 
 /* Body */
-/* Profile Page Background Style */
+/* Profile Page Background Style - Deepankar Kotnala Green Tint*/
 .page-header {
   background: rgba(44, 44, 44, 0.2);
   /* For browsers that do not support gradients */
   /* For Safari 5.1 to 6.0 */
   /* For Opera 11.1 to 12.0 */
   /* For Firefox 3.6 to 15 */
-  background: -webkit-gradient(linear, left bottom, left top, from(rgba(44, 44, 44, 0.2)), to(rgba(55, 140, 63, 0.6)));
-  background: linear-gradient(0deg, rgba(44, 44, 44, 0.2), rgba(55, 140, 63, 0.6));
+  background: -webkit-gradient(linear, left bottom, left top, from(rgba(34, 49, 63, 0.1)), to(rgba(34, 49, 63, 0.1)));
+  background: linear-gradient(0deg, rgba(34, 49, 63, 0.4), rgba(34, 49, 63, 0.4));
   /* Standard syntax */
 }
 
