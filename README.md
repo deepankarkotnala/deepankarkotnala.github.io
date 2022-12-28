@@ -1,4 +1,4 @@
-### Visit [https://deepankarkotnala.github.io](https://deepankarkotnala.github.io/) to have a look at my professional website.
+### Visit [https://deepankarkotnala.github.io](https://deepankarkotnala.github.io/) to have a look at my portfolio.
 
 ### Contents of my website:
 * Work Experience
