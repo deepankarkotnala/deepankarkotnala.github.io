@@ -2838,7 +2838,7 @@ h3, .h3 {
 h4, .h4 {
   font-size: 1.714em;
   line-height: 1.45em;
-  margin-top: 30px;
+
   margin-bottom: 15px;
 }
 
@@ -5082,8 +5082,14 @@ Created using IcoMoon - icomoon.io
   text-decoration: none;
 }
 
+.top-section {
+  padding: 4rem 0 !important;
+  position: relative;
+  background: #FFFFFF;
+}
+
 .section {
-  padding: 70px 0;
+  padding: 1.2rem 0 !important;
   position: relative;
   background: #FFFFFF;
 }
