@@ -68,13 +68,15 @@
 .bootstrap-switch .bootstrap-switch-handle-on.bootstrap-switch-brown,
 .bootstrap-switch .bootstrap-switch-handle-off.bootstrap-switch-brown {
   color: #fff;
-  background: #153058;
+    background-color: #153058; 
+  background-image: linear-gradient(to right, #4B6CB7, #153058) !important;
 }
 
 .bootstrap-switch .bootstrap-switch-handle-on.bootstrap-switch-blue,
 .bootstrap-switch .bootstrap-switch-handle-off.bootstrap-switch-blue {
   color: #fff;
-  background: #153058;
+    background-color: #153058; 
+  background-image: linear-gradient(to right, #4B6CB7, #153058) !important;
 }
 
 .bootstrap-switch .bootstrap-switch-handle-on.bootstrap-switch-green,
@@ -92,7 +94,8 @@
 .bootstrap-switch .bootstrap-switch-handle-on.bootstrap-switch-red,
 .bootstrap-switch .bootstrap-switch-handle-off.bootstrap-switch-red {
   color: #fff;
-  background: #153058;
+    background-color: #153058; 
+  background-image: linear-gradient(to right, #4B6CB7, #153058) !important;
 }
 
 .bootstrap-switch .bootstrap-switch-handle-on.bootstrap-switch-default,
@@ -374,7 +377,8 @@
 }
 
 .noUi-connect {
-  background: #153058;
+    background-color: #153058; 
+  background-image: linear-gradient(to right, #4B6CB7, #153058) !important;
   border-radius: 3px;
   -webkit-transition: background 450ms;
   transition: background 450ms;
@@ -1298,7 +1302,7 @@
   border-radius: 0.1875rem;
   padding: 11px 22px;
   cursor: pointer;
-  background-color: #153058s;
+  background-color: linear-gradient(to right, #4B6CB7, #153058) !important;;
   color: #FFFFFF;
 }
 
@@ -1490,7 +1494,7 @@ fieldset[disabled]
 }
 
 .btn-primary {
-  background-color: #153058;
+  background-color: linear-gradient(to right, #4B6CB7, #153058) !important;
   color: #FFFFFF;
 }
 
@@ -2577,7 +2581,8 @@ textarea.form-control:focus, textarea.form-control:active {
 }
 
 .progress-container.progress-primary .progress-bar {
-  background: #153058;
+    background-color: #153058; 
+  background-image: linear-gradient(to right, #4B6CB7, #153058) !important;
 }
 
 .progress-container.progress-primary .progress-value,
@@ -2590,7 +2595,8 @@ textarea.form-control:focus, textarea.form-control:active {
 }
 
 .progress-container.progress-info .progress-bar {
-  background: #153058;
+    background-color: #153058; 
+  background-image: linear-gradient(to right, #4B6CB7, #153058) !important;
 }
 
 .progress-container.progress-info .progress-value,
@@ -2599,11 +2605,13 @@ textarea.form-control:focus, textarea.form-control:active {
 }
 
 .progress-container.progress-success .progress {
-  background: #153058;
+    background-color: #153058; 
+  background-image: linear-gradient(to right, #4B6CB7, #153058) !important;
 }
 
 .progress-container.progress-success .progress-bar {
-  background: #153058;
+    background-color: #153058; 
+  background-image: linear-gradient(to right, #4B6CB7, #153058) !important;
 }
 
 .progress-container.progress-success .progress-value,
@@ -2629,7 +2637,8 @@ textarea.form-control:focus, textarea.form-control:active {
 }
 
 .progress-container.progress-danger .progress-bar {
-  background: #153058;
+    background-color: #153058; 
+  background-image: linear-gradient(to right, #4B6CB7, #153058) !important;
 }
 
 .progress-container.progress-danger .progress-value,
@@ -2868,8 +2877,14 @@ p {
   font-size: 1.14em;
 }
 
+.title2 {
+  font-weight: 600;
+  color: #d7d7d7 !important;
+}
+
 .title1 {
-  font-weight: 700;
+  font-weight: 600;
+  color: #343434 !important;
 }
 
 .title.title-up {
@@ -3358,7 +3373,8 @@ body {
 }
 
 .navbar.bg-white:not(.navbar-transparent) .button-bar {
-  background: #153058;
+    background-color: #153058; 
+  background-image: linear-gradient(to right, #4B6CB7, #153058) !important;
 }
 
 .navbar.bg-white:not(.navbar-transparent) .nav-item.active .nav-link:not(.btn),
@@ -3393,11 +3409,11 @@ body {
 }
 
 .bg-warning {
-  background-color: #FFB236 !important;
+  background-color: #FFB236 ;
 }
 
 .bg-white {
-  background-color: #FFFFFF !important;
+  background-color: #FFFFFF ;
 }
 
 .dropdown-menu {
@@ -5593,7 +5609,8 @@ Created using IcoMoon - icomoon.io
     transition: all 0.5s cubic-bezier(0.685, 0.0473, 0.346, 1);
   }
   .sidebar-collapse .navbar-collapse:before {
-    background: #153058;
+      background-color: #153058; 
+  background-image: linear-gradient(to right, #4B6CB7, #153058) !important;
     /* For browsers that do not support gradients */
     /* For Safari 5.1 to 6.0 */
     /* For Opera 11.1 to 12.0 */
@@ -5699,7 +5716,8 @@ Created using IcoMoon - icomoon.io
     transition: width .2s linear;
   }
   .sidebar-collapse .navbar.bg-white:not(.navbar-transparent) .navbar-toggler-bar {
-    background: #153058;
+      background-color: #153058; 
+  background-image: linear-gradient(to right, #4B6CB7, #153058) !important;
   }
   .sidebar-collapse .navbar .toggled .navbar-toggler-bar {
     width: 24px;
@@ -6042,7 +6060,8 @@ Created using IcoMoon - icomoon.io
     transition: width .2s linear;
   }
   .bootstrap-collapse .navbar.bg-white:not(.navbar-transparent) .navbar-toggler-bar {
-    background: #153058;
+      background-color: #153058; 
+  background-image: linear-gradient(to right, #4B6CB7, #153058) !important;
   }
   .bootstrap-collapse .navbar .toggled .navbar-toggler-bar {
     width: 24px;
@@ -6308,7 +6327,8 @@ Created using IcoMoon - icomoon.io
     transition: all 0.5s cubic-bezier(0.685, 0.0473, 0.346, 1);
   }
   .burger-menu .navbar-collapse:before {
-    background: #153058;
+      background-color: #153058; 
+  background-image: linear-gradient(to right, #4B6CB7, #153058) !important;
     /* For browsers that do not support gradients */
     /* For Safari 5.1 to 6.0 */
     /* For Opera 11.1 to 12.0 */
@@ -6414,7 +6434,8 @@ Created using IcoMoon - icomoon.io
     transition: width .2s linear;
   }
   .burger-menu .navbar.bg-white:not(.navbar-transparent) .navbar-toggler-bar {
-    background: #153058;
+      background-color: #153058; 
+  background-image: linear-gradient(to right, #4B6CB7, #153058) !important;
   }
   .burger-menu .navbar .toggled .navbar-toggler-bar {
     width: 24px;
@@ -6929,13 +6950,15 @@ Created using IcoMoon - icomoon.io
   height: 180px;
   width: 180px;
   position: absolute;
-  left: 0;
-
+  left: 0; 
+  -webkit-animation: pulsate 1.6s ease-out;
+          animation: pulsate 1.6s ease-out;
   -webkit-animation-iteration-count: infinite;
-          animation-iteration-count: infinite;
+          animation-iteration-count: infinite; 
   opacity: 0.0;
-  z-index: 99;
+   z-index: 99;
 }
+
 
 .cc-profile-image img {
   position: relative;
@@ -7548,13 +7571,13 @@ a {
 
 .b1 {
 	color: #CFD8DC;
-	background-color: #153058;
+  background-color: #153058; 
 	-webkit-transition: all 0.5s;
 	-moz-transition: all 0.5s;
 	-o-transition: all 0.5s;
 	transition: all 0.3s !important;
 	position: relative;
-	font-size: 1.1em;
+	font-size: 1.2em;
 	padding: 0.4em;
 	border: 1px solid #153058;
 	border-radius: 25px;	
