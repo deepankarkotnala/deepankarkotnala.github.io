@@ -2984,6 +2984,8 @@ body {
   font-family: "Montserrat", "Helvetica Neue", Arial, sans-serif;
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
+  scroll-behavior: smooth;
+
 }
 
 .main {
@@ -4613,7 +4615,7 @@ Created using IcoMoon - icomoon.io
   font-size: 2em;
 }
 
-.card {
+.custom-card {
   border: 0px;
   border-radius: 2.5rem;
   display: inline-block;
@@ -4647,94 +4649,6 @@ Created using IcoMoon - icomoon.io
   min-height: 190px;
 }
 
-.card[data-background-color="orange"] {
-  background-color: #153058;
-}
-
-.card[data-background-color="red"] {
-  background-color: #153058;
-}
-
-.card[data-background-color="yellow"] {
-  background-color: #FFB236;
-}
-
-.card[data-background-color="blue"] {
-  background-color: #153058;
-}
-
-.card[data-background-color="green"] {
-  background-color: #153058;
-}
-
-.card-signup {
-  max-width: 350px;
-  margin: 0 auto;
-}
-
-.card-signup .header {
-  margin-left: 20px;
-  margin-right: 20px;
-  padding: 30px 0;
-}
-
-.card-signup .text-divider {
-  margin-top: 30px;
-  margin-bottom: 0px;
-  text-align: center;
-}
-
-.card-signup .card-body {
-  padding-top: 0px;
-  padding-bottom: 0px;
-  min-height: auto;
-}
-
-.card-signup .checkbox {
-  margin-top: 20px;
-}
-
-.card-signup .checkbox label {
-  margin-left: 17px;
-}
-
-.card-signup .checkbox .checkbox-material {
-  padding-right: 12px;
-}
-
-.card-signup .social-line {
-  margin-top: 20px;
-  text-align: center;
-}
-
-.card-signup .social-line .btn.btn-icon,
-.card-signup .social-line .btn.btn-icon .btn-icon -mini {
-  margin-left: 5px;
-  margin-right: 5px;
-  -webkit-box-shadow: 0px 5px 50px 0px rgba(0, 0, 0, 0.2);
-          box-shadow: 0px 5px 50px 0px rgba(0, 0, 0, 0.2);
-}
-
-.card-signup .footer {
-  margin-bottom: 10px;
-  margin-top: 24px;
-}
-
-.card-plain {
-  background: transparent;
-  -webkit-box-shadow: none;
-          box-shadow: none;
-}
-
-.card-plain .header {
-  margin-left: 0;
-  margin-right: 0;
-}
-
-.card-plain .content {
-  padding-left: 0;
-  padding-right: 0;
-}
 
 .footer {
   padding: 24px 0;
@@ -4976,138 +4890,6 @@ Created using IcoMoon - icomoon.io
 .section-full-page .footer,
 .section-full-page .footer .copyright a {
   color: #FFFFFF;
-}
-
-.login-page .card-login {
-  border-radius: 0.25rem;
-  padding-bottom: 0.7rem;
-  max-width: 320px;
-}
-
-.login-page .card-login .btn-wd {
-  min-width: 180px;
-}
-
-.login-page .card-login .logo-container {
-  width: 65px;
-  margin: 0 auto;
-  margin-bottom: 55px;
-}
-
-.login-page .card-login .logo-container img {
-  width: 100%;
-}
-
-.login-page .card-login .input-group:last-child {
-  margin-bottom: 40px;
-}
-
-.login-page .card-login.card-plain .form-control::-moz-placeholder {
-  color: #ebebeb;
-  opacity: 1;
-  filter: alpha(opacity=100);
-}
-
-.login-page .card-login.card-plain .form-control:-moz-placeholder {
-  color: #ebebeb;
-  opacity: 1;
-  filter: alpha(opacity=100);
-}
-
-.login-page .card-login.card-plain .form-control::-webkit-input-placeholder {
-  color: #ebebeb;
-  opacity: 1;
-  filter: alpha(opacity=100);
-}
-
-.login-page .card-login.card-plain .form-control:-ms-input-placeholder {
-  color: #ebebeb;
-  opacity: 1;
-  filter: alpha(opacity=100);
-}
-
-.login-page .card-login.card-plain .form-control {
-  border-color: rgba(255, 255, 255, 0.5);
-  color: #FFFFFF;
-}
-
-.login-page .card-login.card-plain .form-control:focus {
-  border-color: #FFFFFF;
-  background-color: transparent;
-  color: #FFFFFF;
-}
-
-.login-page .card-login.card-plain .has-success:after,
-.login-page .card-login.card-plain .has-danger:after {
-  color: #FFFFFF;
-}
-
-.login-page .card-login.card-plain .has-danger .form-control {
-  background-color: transparent;
-}
-
-.login-page .card-login.card-plain .input-group-addon {
-  background-color: transparent;
-  border-color: rgba(255, 255, 255, 0.5);
-  color: #FFFFFF;
-}
-
-.login-page .card-login.card-plain .input-group-focus .input-group-addon {
-  background-color: transparent;
-  border-color: #FFFFFF;
-  color: #FFFFFF;
-}
-
-.login-page .card-login.card-plain .form-group.form-group-no-border .form-control,
-.login-page .card-login.card-plain .input-group.form-group-no-border .form-control {
-  background-color: rgba(255, 255, 255, 0.1);
-  color: #FFFFFF;
-}
-
-.login-page .card-login.card-plain .form-group.form-group-no-border .form-control:focus, .login-page .card-login.card-plain .form-group.form-group-no-border .form-control:active, .login-page .card-login.card-plain .form-group.form-group-no-border .form-control:active,
-.login-page .card-login.card-plain .input-group.form-group-no-border .form-control:focus,
-.login-page .card-login.card-plain .input-group.form-group-no-border .form-control:active,
-.login-page .card-login.card-plain .input-group.form-group-no-border .form-control:active {
-  background-color: rgba(255, 255, 255, 0.2);
-  color: #FFFFFF;
-}
-
-.login-page .card-login.card-plain .form-group.form-group-no-border .form-control + .input-group-addon,
-.login-page .card-login.card-plain .input-group.form-group-no-border .form-control + .input-group-addon {
-  background-color: rgba(255, 255, 255, 0.1);
-}
-
-.login-page .card-login.card-plain .form-group.form-group-no-border .form-control + .input-group-addon:focus, .login-page .card-login.card-plain .form-group.form-group-no-border .form-control + .input-group-addon:active, .login-page .card-login.card-plain .form-group.form-group-no-border .form-control + .input-group-addon:active,
-.login-page .card-login.card-plain .input-group.form-group-no-border .form-control + .input-group-addon:focus,
-.login-page .card-login.card-plain .input-group.form-group-no-border .form-control + .input-group-addon:active,
-.login-page .card-login.card-plain .input-group.form-group-no-border .form-control + .input-group-addon:active {
-  background-color: rgba(255, 255, 255, 0.2);
-  color: #FFFFFF;
-}
-
-.login-page .card-login.card-plain .form-group.form-group-no-border .form-control:focus + .input-group-addon,
-.login-page .card-login.card-plain .input-group.form-group-no-border .form-control:focus + .input-group-addon {
-  background-color: rgba(255, 255, 255, 0.2);
-  color: #FFFFFF;
-}
-
-.login-page .card-login.card-plain .form-group.form-group-no-border .input-group-addon,
-.login-page .card-login.card-plain .input-group.form-group-no-border .input-group-addon {
-  background-color: rgba(255, 255, 255, 0.1);
-  border: none;
-  color: #FFFFFF;
-}
-
-.login-page .card-login.card-plain .form-group.form-group-no-border.input-group-focus .input-group-addon,
-.login-page .card-login.card-plain .input-group.form-group-no-border.input-group-focus .input-group-addon {
-  background-color: rgba(255, 255, 255, 0.2);
-  color: #FFFFFF;
-}
-
-.login-page .card-login.card-plain .input-group-addon,
-.login-page .card-login.card-plain .form-group.form-group-no-border .input-group-addon,
-.login-page .card-login.card-plain .input-group.form-group-no-border .input-group-addon {
-  color: rgba(255, 255, 255, 0.8);
 }
 
 .login-page .link {
@@ -7059,7 +6841,7 @@ Created using IcoMoon - icomoon.io
 
 /* References Style */
 .cc-reference .card {
-  padding: 40px;
+  padding: 2rem;
 }
 
 .cc-reference img {
