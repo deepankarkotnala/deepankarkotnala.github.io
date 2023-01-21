@@ -4614,15 +4614,33 @@ Created using IcoMoon - icomoon.io
 }
 
 .card {
-  border: 0;
+  border: 0px;
   border-radius: 2.5rem;
   display: inline-block;
   position: relative;
   overflow: hidden;
   width: 100%;
-  margin-bottom: 20px;
+  margin-bottom: 1.5rem;
+  -webkit-box-shadow: 0px 5px 25px 0px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 5px 25px 0px rgb(0 0 0 / 0.1);
+}
+
+.card-article {
+  border: 0px;
+  border-radius: 2.5rem;
+  display: inline-block;
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  margin-bottom: 1.5rem;
+  -webkit-box-shadow: 0px 5px 25px 0px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 5px 25px 0px rgb(0 0 0 / 0.1);
+}
+
+.card-article:hover {
+  border: 2px !important;
   -webkit-box-shadow: 0px 5px 25px 0px rgba(0, 0, 0, 0.2);
-          box-shadow: 0px 5px 25px 0px rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 5px 25px 0px rgb(0 0 0 / 0.2);
 }
 
 .card .card-body {
