@@ -26,6 +26,106 @@
          margin-right: auto;
          width: 100%;
          }
+
+
+
+
+
+
+
+         .download-steps-wrapper {
+  max-width: 820px;
+  margin: 60px auto 0 auto;
+  text-align: center;
+  padding: 0 10px;
+  font-family: 'Montserrat', 'Helvetica Neue', Arial, sans-serif;
+}
+.main-title {
+  margin-bottom: 10px;
+  font-size: 2.4em;
+  font-weight: 600;
+  color: #222;
+}
+.subtitle {
+  color: #67798e;
+  font-size: 1.08em;
+  margin-bottom: 28px;
+}
+.subtitle a {
+  color: #1967d2;
+  text-decoration: underline;
+  font-weight: 500;
+}
+.cards-container {
+  display: flex;
+  gap: 26px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 38px;
+}
+.step-card {
+  flex: 1 1 240px;
+  min-width: 225px;
+  max-width: 300px;
+  background: #f4f8fd;
+  padding: 34px 24px 20px 24px;
+  border-radius: 20px;
+  box-shadow: 0 6px 32px rgba(70,150,210,0.06);
+  transition: transform 0.18s, box-shadow 0.18s;
+  animation: jello-horizontal 0.9s;
+  text-align: left;
+  margin-bottom: 16px;
+}
+/* Card specific colors */
+.step-card.step1 { background: #eaf1fb; }
+.step-card.step2 { background: #fff9e2; }
+.step-card.step3 { background: #e9f7ef; }
+.step-card:hover {
+  transform: translateY(-4px) scale(1.035);
+  box-shadow: 0 16px 32px rgba(42,92,175,0.13);
+}
+.step-card h2 {
+  font-size: 1.13em;
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin-bottom: 12px;
+  color: #222;
+}
+.step-card span {
+  font-size: 1.5em;
+  display: block;
+  margin-top: 6px;
+  color: #1a73e8;
+  font-weight: 500;
+  letter-spacing: .8px;
+}
+.step-card.step2 span { color: #d9a400; }
+.step-card.step3 span { color: #0b8043; }
+.step-card a {
+  color: #1967d2;
+  text-decoration: underline;
+  font-weight: 500;
+}
+.step-card p {
+  font-size: 1.02em;
+  color: #434a54;
+  line-height: 1.52;
+  margin-bottom: 0;
+}
+@media (max-width: 800px) {
+  .cards-container {
+    flex-direction: column;
+    align-items: center;
+  }
+  .step-card {
+    max-width: 95vw;
+  }
+}
+
+
+
+
+
       </style>
    </head>
    <body id="top">
@@ -490,7 +590,52 @@
                   <div class="container cc-education">
                      <div class="h5 text-center mb-3 title1">Awards & Certifications</div>
 
-                     <div class="custom-card">
+
+
+                     <!-- Awards & Certifications Cards START -->
+<div class="cards-container" style="justify-content:center; margin-top:40px;">
+  <!-- 2024 Spot Award -->
+  <div class="step-card step1 jello-horizontal">
+    <h2>
+      <span style="font-size:1.7em; color:#4285f4; vertical-align:middle;">🏆</span>
+      SPOT AWARD | TCG DIGITAL
+    </h2>
+    <p>
+      Received the Spot Award for consistently delivering high-quality work with exceptional accuracy and dedication, resulting in outstanding outcomes and high client satisfaction.
+    </p>
+  </div>
+  <!-- 2019 Project Star Award -->
+  <div class="step-card step2 jello-horizontal">
+    <h2>
+      <span style="font-size:1.7em; color:#d9a400; vertical-align:middle;">🌟</span>
+      PROJECT STAR AWARD | CAPGEMINI
+    </h2>
+    <p>
+      Received the Project Star Award at Capgemini for exceptional performance and excellence in customer delivery within the Oracle Apps NA Business Unit.
+    </p>
+    <p style="margin-top:8px;">
+      <!-- <a class="category"
+         href="https://media-exp1.licdn.com/media-proxy/ext?w=797&h=578&f=n&hash=W1Unb96vHDHb%2BKBKdjDJlDVi84U%3D&ora=1%2CaFBCTXdkRmpGL2lvQUFBPQ%2CxAVta5g-0R6jnhodx1Ey9KGTqAGj6E5DQJHUA3L0CHH05IbfPWi9Lc6NeLao9UARcCgCjQBmKe-1SDazQY69eNjsetV12sLmJML5agYUbhl4j3lK6w"
+         target="_blank">View Credentials</a> -->
+    </p>
+  </div>
+  <!-- 2019 Data Science Certification -->
+  <div class="step-card step3 jello-horizontal">
+    <h2>
+      <span style="font-size:1.7em; color:#34a853; vertical-align:middle;">🧠</span>
+      NVIDIA DEEP LEARNING INSTITUTE CERTIFICATE
+    </h2>
+    <p>
+      I hold a certification in NVIDIA RAPIDS, showcasing expertise in GPU-accelerated data science workflows.
+    </p>
+    <p style="margin-top:8px;">
+    </p>
+  </div>
+</div>
+<!-- Awards & Certifications Cards END -->
+
+
+                     <!-- <div class="custom-card">
                         <div class="row">
                            <div class="col-md-3 bg-primary" data-aos="fade-right" data-aos-offset="50" data-aos-duration="500">
                               <div class="card-body cc-education-header">
@@ -506,8 +651,8 @@
                               </div>
                            </div>
                         </div>
-                     </div>
-                     
+                     </div> -->
+<!--                      
                      <div class="custom-card">
                         <div class="row">
                            <div class="col-md-3 bg-primary" data-aos="fade-right" data-aos-offset="50"
@@ -554,43 +699,14 @@
                               </div>
                            </div>
                         </div>
-                     </div>
+                     </div> -->
                   </div>
                </div>
-               <div class="section" id="articles">
-                  <div class="container cc-reference">
-                     <div class="h5 mb-4 text-center title1">Medium Articles and Tutorials</div>
-                     <div >
-                        <div class="row justify-content-center" style="margin: auto !important;">
-                           <div class="col-lg-3 col-md-3 cc-reference-header card card-article" style="margin:15px auto 15px !important;">
-                              <a href="https://medium.com/@dkotnala5/novel-coronavirus-covid-19-tracker-app-using-flask-1fd08dc314b6" target="_blank">
-                                 <img class="center_img"
-                                    src="images/covid.jpg"
-                                    alt="Image" />
-                                 <h5 style="font-size: 1.25em; margin-top: 0.5rem; text-align: center; font-weight: 600 !important;">How to develop a COVID-19 Tracker App using Flask</h5>
-                              </a>
-                           </div>
-                           <div class="col-lg-3 col-md-3 cc-reference-header card card-article" style="margin:15px auto 15px !important;">
-                              <a href="https://medium.com/@dkotnala5/quick-and-simplified-exploratory-data-analysis-using-pandas-profiling-973ed12f91d0" target="_blank">
-                                 <img class="center_img"
-                                    src="images/article3.jpeg"
-                                    alt="Image" />
-                                 <h5 style="font-size: 1.25em; margin-top: 0.5rem; text-align: center; font-weight: 600 !important;">Simplified Exploratory Data Analysis using Pandas-Profiling</h5>
-                              </a>
-                           </div>
-                           <div class="col-lg-3 col-md-3 cc-reference-header card card-article" style="margin:15px auto 15px !important;">
-                              <a href="https://medium.com/@dkotnala5/simplest-guide-on-getting-started-with-flask-8f70bc1c5c96" target="_blank">
-                                 <img class="center_img"
-                                    src="images/article2.jpeg"
-                                    alt="Image" />
-                                 <h5 style="font-size: 1.25em; margin-top: 0.5rem; text-align: center; font-weight: 600 !important;">
-                                 Simplest Guide on Getting Started with Flask</h6> 
-                              </a>
-                           </div>
-                        </div>
-                     </div>
-                  </div>
-               </div>
+
+
+
+
+
             </div>
          </div>
       </div>
@@ -601,14 +717,9 @@
                aria-hidden="true"></i></a>
             <a class="btn btn-link" href="https://github.com/deepankarkotnala" rel="tooltip" title1="GitHub"
                target="_blank"><i class="fab fa-github fa-2x " aria-hidden="true"></i></a>
-            <a class="btn btn-link"
-               href="https://medium.com/@dkotnala5/quick-and-simplified-exploratory-data-analysis-using-pandas-profiling-973ed12f91d0"
-               rel="tooltip" title1="Medium Article" target="_blank"><i class="fab fa-medium fa-2x "
-               aria-hidden="true"></i></a>
+
             <a class="btn btn-link" href="https://www.linkedin.com/in/deepankarkotnala/" rel="tooltip" title1="LinkedIn"
                target="_blank"><i class="fab fa-linkedin fa-2x " aria-hidden="true"></i></a>
-            <a class="btn btn-link" href="https://www.instagram.com/datascienceuniverse" rel="tooltip"
-               title1="Instagram Profile"><i class="fab fa-instagram fa-2x " aria-hidden="true"></i></a>
          </div>
          <div class="h5 title1 text-center">Deepankar Kotnala</div>
          <div class="text-center text-muted">
