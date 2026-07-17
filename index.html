@@ -1,0 +1,459 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="Deepankar Kotnala — AI Engineer portfolio">
+  <meta name="author" content="Deepankar Kotnala">
+  <meta name="theme-color" content="#111925">
+  <title>Deepankar Kotnala | AI Engineer</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>DK</text></svg>">
+  <script>
+    try {
+      const savedTheme = localStorage.getItem('portfolio-theme');
+      document.documentElement.dataset.theme = savedTheme === 'light' ? 'light' : 'dark';
+    } catch (_) {
+      document.documentElement.dataset.theme = 'dark';
+    }
+  </script>
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="script.js"></script>
+</head>
+<body id="top">
+  <div class="scroll-progress" aria-hidden="true"><span></span></div>
+  <div class="ambient ambient-one" aria-hidden="true"></div>
+  <div class="ambient ambient-two" aria-hidden="true"></div>
+  <div class="noise" aria-hidden="true"></div>
+
+  <header class="site-header" id="site-header">
+    <nav class="nav shell" aria-label="Primary navigation">
+      <a class="brand" href="#top" aria-label="Deepankar Kotnala home">
+        <span class="brand-mark">DK</span>
+        <span class="brand-name">Deepankar Kotnala</span>
+      </a>
+
+      <div class="nav-links" id="nav-links" aria-hidden="false">
+        <a href="#about">About</a>
+        <a href="#skills">Skills</a>
+        <a href="#experience">Experience</a>
+        <a href="#education">Education</a>
+        <a href="#recognition">Recognition</a>
+        <a class="nav-social" href="https://github.com/deepankarkotnala" target="_blank" rel="noreferrer">GitHub</a>
+        <a class="nav-cta" href="https://www.linkedin.com/in/deepankarkotnala/" target="_blank" rel="noreferrer">LinkedIn</a>
+      </div>
+
+      <div class="nav-controls">
+        <button class="theme-toggle" type="button" aria-pressed="true" aria-label="Switch to light mode">
+          <svg class="theme-icon moon-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 15.2A8.5 8.5 0 018.8 4 8.5 8.5 0 1020 15.2z"/></svg>
+          <svg class="theme-icon sun-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.66 6.34l1.41-1.41"/></svg>
+          <span class="theme-label">Light</span>
+        </button>
+        <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="nav-links" aria-label="Open navigation">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </nav>
+    <button class="nav-backdrop" type="button" aria-label="Close navigation" tabindex="-1"></button>
+  </header>
+
+  <main>
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-backdrop" aria-hidden="true"></div>
+      <div class="hero-grid shell">
+        <div class="hero-copy reveal">
+          <div class="eyebrow"><span class="status-dot"></span> Building intelligent systems</div>
+          <h1 id="hero-title">Deepankar<br><span>Kotnala</span></h1>
+          <p class="hero-role">AI Engineer</p>
+          <p class="hero-intro">Transforming complex data and machine learning challenges into practical, production-ready solutions.</p>
+          <div class="hero-actions">
+            <a class="button button-primary" href="https://drive.google.com/uc?export=download&id=1SpnLPjwiM_wsdMXGUhxlHAmZUH2DohuS">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 17v3h14v-3"/></svg>
+              Download CV
+            </a>
+            <a class="button button-ghost" href="mailto:dkotnala5@gmail.com">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16v12H4zM4 7l8 6 8-6"/></svg>
+              Get in touch
+            </a>
+          </div>
+          <div class="hero-stats" aria-label="Career summary">
+            <div><strong>9+</strong><span>Years in software</span></div>
+            <div><strong>4</strong><span>Organizations</span></div>
+            <div><strong>10</strong><span>Core competencies</span></div>
+          </div>
+        </div>
+
+        <div class="hero-visual reveal" data-delay="120">
+          <div class="orbit orbit-one" aria-hidden="true"></div>
+          <div class="orbit orbit-two" aria-hidden="true"></div>
+          <svg class="hero-network" viewBox="0 0 420 420" aria-hidden="true">
+            <path class="svg-dash" d="M68 232C112 122 226 74 348 128M70 234c66 78 174 112 278 52M140 104c-20 92 28 192 128 238"/>
+            <circle class="svg-pulse" cx="68" cy="232" r="5"/><circle class="svg-pulse delay-1" cx="348" cy="128" r="5"/><circle class="svg-pulse delay-2" cx="268" cy="342" r="5"/>
+          </svg>
+          <article class="profile-card glass tilt-card">
+            <div class="profile-glow" aria-hidden="true"></div>
+            <div class="profile-avatar-wrap">
+              <a class="profile-image" href="https://www.linkedin.com/in/deepankarkotnala/" target="_blank" rel="noreferrer" aria-label="Open Deepankar Kotnala's LinkedIn profile">
+                <img src="https://avatars.githubusercontent.com/u/11138613?v=4" onerror="this.onerror=null;this.src='images/profile-placeholder.svg'" alt="Deepankar Kotnala" width="460" height="460" decoding="async">
+              </a>
+              <span class="profile-status" aria-hidden="true"></span>
+            </div>
+            <div class="profile-content">
+              <div>
+                <p class="micro-label">Based in</p>
+                <p>Uttarakhand, India</p>
+              </div>
+              <span class="availability">Open to connect</span>
+            </div>
+            <div class="profile-tags" aria-label="Specializations">
+              <span>AI Agents</span><span>RAG</span><span>ML</span><span>FastAPI</span>
+            </div>
+          </article>
+        </div>
+      </div>
+      <a class="scroll-cue" href="#about" aria-label="Scroll to About section"><span></span>Explore</a>
+    </section>
+
+    <section class="section" id="about" aria-labelledby="about-title">
+      <div class="shell">
+        <div class="section-heading reveal">
+          <div class="heading-copy">
+            <p class="kicker">01 / About</p>
+            <h2 id="about-title">A practical approach to intelligent products.</h2>
+          </div>
+          <div class="section-art art-about" aria-hidden="true">
+            <svg class="ai-diagram neural-diagram neural-diagram-deep" viewBox="0 0 280 150">
+              <g class="neural-layer-guides">
+                <path d="M18 10V140M92 5V145M170 8V142M254 28V122"/>
+              </g>
+              <g class="neural-links neural-links-input">
+                <path d="M18 25L92 15M18 25L92 42M18 25L92 70M18 25L92 98M18 25L92 125M18 58L92 15M18 58L92 42M18 58L92 70M18 58L92 98M18 58L92 125M18 92L92 15M18 92L92 42M18 92L92 70M18 92L92 98M18 92L92 125M18 125L92 15M18 125L92 42M18 125L92 70M18 125L92 98M18 125L92 125"/>
+              </g>
+              <g class="neural-links neural-links-hidden">
+                <path d="M92 15L170 27M92 15L170 59M92 15L170 91M92 15L170 123M92 42L170 27M92 42L170 59M92 42L170 91M92 42L170 123M92 70L170 27M92 70L170 59M92 70L170 91M92 70L170 123M92 98L170 27M92 98L170 59M92 98L170 91M92 98L170 123M92 125L170 27M92 125L170 59M92 125L170 91M92 125L170 123"/>
+              </g>
+              <g class="neural-links neural-links-output">
+                <path d="M170 27L254 52M170 27L254 98M170 59L254 52M170 59L254 98M170 91L254 52M170 91L254 98M170 123L254 52M170 123L254 98"/>
+              </g>
+              <g class="neural-nodes neural-inputs">
+                <circle cx="18" cy="25" r="5"/><circle class="delay-1" cx="18" cy="58" r="5"/><circle class="delay-2" cx="18" cy="92" r="5"/><circle class="delay-3" cx="18" cy="125" r="5"/>
+              </g>
+              <g class="neural-nodes neural-hidden-one">
+                <circle class="delay-1" cx="92" cy="15" r="5.5"/><circle class="delay-2" cx="92" cy="42" r="5.5"/><circle class="delay-3" cx="92" cy="70" r="5.5"/><circle cx="92" cy="98" r="5.5"/><circle class="delay-1" cx="92" cy="125" r="5.5"/>
+              </g>
+              <g class="neural-nodes neural-hidden-two">
+                <circle class="delay-2" cx="170" cy="27" r="6"/><circle class="delay-3" cx="170" cy="59" r="6"/><circle cx="170" cy="91" r="6"/><circle class="delay-1" cx="170" cy="123" r="6"/>
+              </g>
+              <g class="neural-nodes neural-outputs">
+                <circle class="delay-1" cx="254" cy="52" r="7"/><circle class="delay-2" cx="254" cy="98" r="7"/>
+              </g>
+              <circle class="data-packet deep-packet-a" cx="0" cy="0" r="3"/>
+              <circle class="data-packet deep-packet-b" cx="0" cy="0" r="3"/>
+              <circle class="data-packet deep-packet-c" cx="0" cy="0" r="3"/>
+            </svg>
+          </div>
+        </div>
+
+        <div class="about-grid">
+          <article class="glass panel about-copy reveal tilt-card">
+            <span class="panel-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M12 4a4 4 0 110 8 4 4 0 010-8zM5 20a7 7 0 0114 0"/></svg>
+            </span>
+            <h3>About me</h3>
+            <p>9+ years experience in the Software Industry working in the Data Science and Machine Learning field having a passion to solve real-world business challenges using data analysis and machine learning. Having industry-based knowledge of statistical and predictive modeling techniques.</p>
+            <p>Please have a look at my <a href="https://www.linkedin.com/in/deepankarkotnala/" target="_blank" rel="noreferrer">LinkedIn profile</a> for more information.</p>
+          </article>
+
+          <article class="glass panel info-card reveal tilt-card" data-delay="100">
+            <span class="panel-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M12 21a9 9 0 100-18 9 9 0 000 18zM12 11v5M12 8h.01"/></svg>
+            </span>
+            <h3>Basic information</h3>
+            <dl>
+              <div><dt>Email</dt><dd><a href="mailto:dkotnala5@gmail.com">dkotnala5@gmail.com</a></dd></div>
+              <div><dt>Address</dt><dd>Uttarakhand, IN</dd></div>
+              <div><dt>Languages</dt><dd>English, Hindi</dd></div>
+            </dl>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-tinted" id="skills" aria-labelledby="skills-title">
+      <div class="shell">
+        <div class="section-heading reveal">
+          <div class="heading-copy">
+            <p class="kicker">02 / Professional Skills</p>
+            <h2 id="skills-title">Core competencies.</h2>
+            <p>Production-focused expertise across modern AI, backend engineering, orchestration, and infrastructure.</p>
+          </div>
+          <div class="section-art art-skills" aria-hidden="true">
+            <svg class="ai-diagram attention-diagram" viewBox="0 0 180 112">
+              <g class="diagram-orbit"><circle cx="90" cy="55" r="51"/><circle cx="90" cy="55" r="43"/></g>
+              <rect class="ai-chip" x="55" y="20" width="70" height="70" rx="18"/>
+              <path class="chip-lines" d="M72 41h36M72 56h36M72 71h36M38 35h17M38 55h17M38 75h17M125 35h17M125 55h17M125 75h17M72 10v10M90 10v10M108 10v10M72 90v12M90 90v12M108 90v12"/>
+              <g class="attention-nodes"><circle cx="76" cy="41" r="3"/><circle cx="91" cy="41" r="3"/><circle cx="106" cy="41" r="3"/><circle cx="76" cy="56" r="3"/><circle cx="91" cy="56" r="3"/><circle cx="106" cy="56" r="3"/><circle cx="76" cy="71" r="3"/><circle cx="91" cy="71" r="3"/><circle cx="106" cy="71" r="3"/></g>
+              <rect class="scan-line" x="61" y="27" width="58" height="8" rx="4"/>
+            </svg>
+          </div>
+        </div>
+
+        <div class="skills-grid">
+          <article class="skill-card glass reveal" style="--level:95%;--level-scale:0.95"><div class="skill-top"><h3>AI Agent Engineering</h3><span>95%</span></div><div class="meter"><i></i></div></article>
+          <article class="skill-card glass reveal" style="--level:92%;--level-scale:0.92" data-delay="40"><div class="skill-top"><h3>Multi-Agent Systems &amp; Workflow Orchestration</h3><span>92%</span></div><div class="meter"><i></i></div></article>
+          <article class="skill-card glass reveal" style="--level:95%;--level-scale:0.95" data-delay="80"><div class="skill-top"><h3>Enterprise RAG Architecture</h3><span>95%</span></div><div class="meter"><i></i></div></article>
+          <article class="skill-card glass reveal" style="--level:92%;--level-scale:0.92" data-delay="120"><div class="skill-top"><h3>API &amp; Backend Engineering <small>FastAPI, REST</small></h3><span>92%</span></div><div class="meter"><i></i></div></article>
+          <article class="skill-card glass reveal" style="--level:95%;--level-scale:0.95"><div class="skill-top"><h3>LLM Application Development</h3><span>95%</span></div><div class="meter"><i></i></div></article>
+          <article class="skill-card glass reveal" style="--level:88%;--level-scale:0.88" data-delay="40"><div class="skill-top"><h3>AI Evaluation &amp; Guardrails</h3><span>88%</span></div><div class="meter"><i></i></div></article>
+          <article class="skill-card glass reveal" style="--level:90%;--level-scale:0.90" data-delay="80"><div class="skill-top"><h3>Production AI Deployment</h3><span>90%</span></div><div class="meter"><i></i></div></article>
+          <article class="skill-card glass reveal" style="--level:90%;--level-scale:0.90" data-delay="120"><div class="skill-top"><h3>Tool Calling, MCP &amp; Enterprise Integrations</h3><span>90%</span></div><div class="meter"><i></i></div></article>
+          <article class="skill-card glass reveal" style="--level:90%;--level-scale:0.90"><div class="skill-top"><h3>Context Engineering</h3><span>90%</span></div><div class="meter"><i></i></div></article>
+          <article class="skill-card glass reveal" style="--level:88%;--level-scale:0.88" data-delay="40"><div class="skill-top"><h3>AI Infrastructure <small>Docker, Linux, Databases</small></h3><span>88%</span></div><div class="meter"><i></i></div></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="experience" aria-labelledby="experience-title">
+      <div class="shell">
+        <div class="section-heading reveal">
+          <div class="heading-copy">
+            <p class="kicker">03 / Experience</p>
+            <h2 id="experience-title">Work experience.</h2>
+          </div>
+          <div class="section-art art-experience" aria-hidden="true">
+            <svg class="ai-diagram agent-diagram" viewBox="0 0 180 112">
+              <g class="diagram-orbit"><ellipse cx="90" cy="56" rx="80" ry="44"/><path d="M18 93C54 72 125 70 164 20"/></g>
+              <path class="workflow-path" d="M20 56h28c10 0 12-28 25-28h22c13 0 15 56 28 56h35"/>
+              <g class="agent-node"><circle cx="20" cy="56" r="8"/><circle cx="73" cy="28" r="10"/><circle cx="123" cy="84" r="10"/><circle cx="158" cy="84" r="8"/></g>
+              <path class="agent-core" d="M68 28h10M73 23v10M118 84h10M123 79v10"/>
+              <circle class="workflow-packet" cx="0" cy="0" r="3.5"/>
+            </svg>
+          </div>
+        </div>
+
+        <div class="timeline">
+          <article class="timeline-item reveal">
+            <div class="timeline-marker"><span></span></div>
+            <div class="experience-card glass">
+              <header>
+                <div><h3>Senior Consultant</h3><p>TCG Digital</p></div>
+                <div class="experience-header-meta"><div class="date-pill current-date">Aug 2022 — Present <span>Current role</span></div><span class="company-index">01</span></div>
+              </header>
+              <div class="project">
+                <h4>Oil &amp; Gas Plant Digital Twin <span>Digitization Project</span></h4>
+                <ul>
+                  <li>Collaborated with a team of 6 members to implement an <strong>optimization algorithm</strong> for a virtual plant, considering variables like raw material prices, temperature, pressure, and duration to assess real-world feasibility.</li>
+                  <li>Contributed to the Python <strong>backend logic</strong> for a digital twin of an oil &amp; gas plant, facilitating effective simulation and optimization processes.</li>
+                  <li>Designed the <strong>architecture</strong> for the digitization application, ensuring seamless integration with existing systems while gathering input from stakeholders.</li>
+                </ul>
+              </div>
+              <div class="project">
+                <h4>Real-Time Optimization <span>Machine Learning</span></h4>
+                <ul>
+                  <li>Enhanced optimization algorithm performance with <strong>multiprocessing</strong>, reducing runtime by <strong>90%</strong>.</li>
+                  <li>Partnered with data analysts to develop Python code that fetches data from multiple sources and generates comprehensive <strong>MS Excel</strong> reports.</li>
+                </ul>
+              </div>
+              <div class="project">
+                <h4>Yield Optimizer <span>Differential Evolution Algorithm</span></h4>
+                <ul>
+                  <li>Trained <strong>machine learning models</strong> that predict propylene and ethylene yield from actual plant data.</li>
+                  <li>Used these models in a DE algorithm to maximize plant yield in collaboration with process engineers.</li>
+                  <li>Developed APIs using <strong>Flask/FastAPI</strong> and deployed them with <strong>Docker</strong> containers.</li>
+                  <li>Built backend API capabilities to send database data to a dashboard, working alongside frontend developers.</li>
+                </ul>
+              </div>
+            </div>
+          </article>
+
+          <article class="timeline-item reveal">
+            <div class="timeline-marker"><span></span></div>
+            <div class="experience-card glass">
+              <header>
+                <div><h3>Data Analyst</h3><p>Genpact India</p></div>
+                <div class="experience-header-meta"><div class="date-pill">Oct 2020 — Aug 2022</div><span class="company-index">02</span></div>
+              </header>
+              <div class="project">
+                <ul>
+                  <li>Collaborated with a team of 10 members on <strong>customer segmentation</strong> using a clustering model, enabling targeted marketing campaigns.</li>
+                  <li>Analyzed marketing data with Python and shared actionable <strong>insights</strong> to enhance campaign performance measurement.</li>
+                  <li>Worked with stakeholders to build performance measurement <strong>dashboards</strong> and analyze target audiences.</li>
+                  <li>Developed the <strong>technical flow, architecture, and code</strong> for complex campaigns using Python and SQL.</li>
+                  <li>Applied <strong>automation</strong> techniques to reduce data latency and improve integration.</li>
+                  <li>Created a data pipeline to migrate data from GCP to Teradata using <strong>Python</strong> and <strong>BigQuery</strong>.</li>
+                  <li>Recommended process improvements for better data quality and effectiveness after working with business analysts.</li>
+                </ul>
+              </div>
+            </div>
+          </article>
+
+          <article class="timeline-item reveal">
+            <div class="timeline-marker"><span></span></div>
+            <div class="experience-card glass">
+              <header>
+                <div><h3>Machine Learning Engineer</h3><p>SmartCow AI Technologies</p></div>
+                <div class="experience-header-meta"><div class="date-pill">Oct 2019 — Feb 2020</div><span class="company-index">03</span></div>
+              </header>
+              <div class="project">
+                <ul>
+                  <li>Set up <strong>Docker</strong> containers on an NVIDIA DGX server for deep learning training and GPU analytics.</li>
+                  <li>Created a <strong>dashboard</strong> using NVDashboard to monitor server and GPU statistics.</li>
+                  <li>Developed a <strong>Flask application</strong> to manage ML models and provide an admin console for NVIDIA edge devices.</li>
+                  <li>Created <strong>Python scripts</strong> to convert raw data into KITTI format for object detection algorithms.</li>
+                  <li>Enabled <strong>rapid data analytics</strong> on large datasets using NVIDIA GPUs.</li>
+                  <li>Created visualizations using <strong>Tableau</strong> and Python libraries including Plotly, Seaborn, and Matplotlib.</li>
+                  <li>Scheduled Python scripts on Linux servers, NVIDIA Jetson devices, and NVIDIA DGX servers.</li>
+                  <li>Used transfer learning to retrain and deploy NVIDIA AI models for license plate recognition.</li>
+                </ul>
+              </div>
+            </div>
+          </article>
+
+          <article class="timeline-item reveal">
+            <div class="timeline-marker"><span></span></div>
+            <div class="experience-card glass">
+              <header>
+                <div><h3>Associate Consultant</h3><p>Capgemini India</p></div>
+                <div class="experience-header-meta"><div class="date-pill">Feb 2016 — Apr 2019</div><span class="company-index">04</span></div>
+              </header>
+              <div class="project">
+                <h4>Data Analysis</h4>
+                <ul>
+                  <li>Developed Python scripts for cleaning and formatting data received from inbound systems.</li>
+                  <li>Developed monthly sales reports in Tableau Desktop.</li>
+                </ul>
+              </div>
+              <div class="project">
+                <h4>Application Development</h4>
+                <ul>
+                  <li>Developed <strong>PL/SQL procedures and functions</strong> for project-specific data processing with an 8-member cross-functional team.</li>
+                  <li>Scheduled shell scripts using <strong>Crontab</strong> and managed Oracle Solaris servers.</li>
+                  <li>Performed <strong>performance tuning</strong> of database procedures and SQL queries using profiling and index rebuild techniques.</li>
+                  <li>Freed 18GB of production server space through strategic <strong>index rebuilds</strong>.</li>
+                  <li>Used <strong>SQL Loader</strong> to load flat-file data into Oracle tables.</li>
+                  <li>Developed the frontend of an <strong>Oracle Data Migration</strong> web tool using HTML, CSS, and JavaScript.</li>
+                </ul>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-tinted" id="education" aria-labelledby="education-title">
+      <div class="shell">
+        <div class="section-heading reveal">
+          <div class="heading-copy">
+            <p class="kicker">04 / Education</p>
+            <h2 id="education-title">Education.</h2>
+          </div>
+          <div class="section-art art-education" aria-hidden="true">
+            <svg class="ai-diagram learning-diagram" viewBox="0 0 180 112">
+              <g class="diagram-orbit"><circle cx="89" cy="57" r="50"/><path d="M31 56h18M129 56h19M89 4v14M89 96v13"/></g>
+              <path class="learning-loop" d="M44 75c-18-28 4-57 36-57 23 0 38 12 43 29M136 38l-13 9-8-14M136 41c14 29-9 56-40 56-21 0-37-10-44-26M42 78l10-7 8 12"/>
+              <path class="brain-path" d="M75 38c-9 0-14 7-12 15-7 5-5 16 4 18 1 10 13 14 20 7 7 7 19 3 20-7 9-2 11-13 4-18 2-8-3-15-12-15-5-7-15-7-20 0zM87 39v40M71 51c8 0 10 5 10 10M103 51c-8 0-10 5-10 10"/>
+              <circle class="svg-pulse delay-1" cx="87" cy="39" r="3"/><circle class="svg-pulse delay-2" cx="67" cy="70" r="3"/><circle class="svg-pulse delay-3" cx="107" cy="70" r="3"/>
+            </svg>
+          </div>
+        </div>
+
+        <div class="education-grid">
+          <article class="education-card glass reveal tilt-card">
+            <div class="education-body">
+              <span class="degree-type">Post Graduation</span>
+              <div class="education-title-row"><h3>Post Graduate Diploma in Data Science (PGDDS)</h3><div class="date-pill">2018 — 2019</div></div>
+              <p class="institution">International Institute of Information Technology — Bangalore (IIIT-B)</p>
+              <p>Developed practical skills in data science through industry projects, mastering tools like Python, R, MySQL, and Tableau. Gained expertise in data manipulation, analytics, and machine learning under guidance from IIIT-B experts.</p>
+              <a class="text-link" href="https://www.credential.net/5cc64f97-af27-4128-b279-d9ae15cdbf85" target="_blank" rel="noreferrer">View credentials <span>↗</span></a>
+            </div>
+          </article>
+
+          <article class="education-card glass reveal tilt-card" data-delay="100">
+            <div class="education-body">
+              <span class="degree-type">Bachelor's Degree</span>
+              <div class="education-title-row"><h3>Bachelor of Technology (B.Tech.)</h3><div class="date-pill">2011 — 2015</div></div>
+              <p class="institution">College of Engineering Roorkee</p>
+              <p>Completed B.Tech in Electronics and Telecommunication, gaining hands-on experience in digital circuits, robotics, and technical projects while actively participating in coding challenges and cultural events.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="recognition" aria-labelledby="recognition-title">
+      <div class="shell">
+        <div class="section-heading reveal">
+          <div class="heading-copy">
+            <p class="kicker">05 / Recognition</p>
+            <h2 id="recognition-title">Awards &amp; certifications.</h2>
+          </div>
+          <div class="section-art art-recognition" aria-hidden="true">
+            <svg class="ai-diagram verified-ai-diagram" viewBox="0 0 180 112">
+              <path class="badge-ring" d="M90 10 104 20l17-2 7 16 16 8-3 17 8 15-12 12-1 18-18 2-13 11-15-9-16 9-13-11-18-2-1-18-12-12 8-15-3-17 16-8 7-16 17 2z"/>
+              <rect class="ai-chip" x="61" y="29" width="58" height="54" rx="14"/>
+              <path class="check-path" d="m74 56 10 10 23-25"/>
+              <circle class="verification-orbit" cx="90" cy="56" r="41" stroke-dasharray="5 10"/>
+              <circle class="svg-pulse" cx="131" cy="56" r="4"/>
+            </svg>
+          </div>
+        </div>
+
+        <div class="recognition-grid">
+          <article class="recognition-card glass reveal tilt-card">
+            <div class="recognition-icon">🏆</div>
+            <span class="recognition-label">Award</span>
+            <h3>Spot Award</h3>
+            <p class="recognition-org">TCG Digital</p>
+            <p>Received the Spot Award for consistently delivering high-quality work with exceptional accuracy and dedication, resulting in outstanding outcomes and high client satisfaction.</p>
+          </article>
+          <article class="recognition-card glass reveal tilt-card" data-delay="80">
+            <div class="recognition-icon">🌟</div>
+            <span class="recognition-label">Award</span>
+            <h3>Project Star Award</h3>
+            <p class="recognition-org">Capgemini</p>
+            <p>Received the Project Star Award at Capgemini for exceptional performance and excellence in customer delivery within the Oracle Apps NA Business Unit.</p>
+          </article>
+          <article class="recognition-card glass reveal tilt-card" data-delay="160">
+            <div class="recognition-icon">🧠</div>
+            <span class="recognition-label">Certification</span>
+            <h3>NVIDIA Deep Learning Institute Certificate</h3>
+            <p class="recognition-org">NVIDIA RAPIDS</p>
+            <p>I hold a certification in NVIDIA RAPIDS, showcasing expertise in GPU-accelerated data science workflows.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="contact-section">
+      <div class="shell">
+        <div class="contact-card glass reveal">
+          <div class="contact-copy">
+            <p class="kicker">Let’s build something meaningful</p>
+            <h2>Have a data or AI challenge?</h2>
+            <p>Connect with me to discuss intelligent systems, machine learning, and production AI.</p>
+          </div>
+          <div class="contact-actions">
+            <svg class="contact-signal ai-diagram" viewBox="0 0 140 76" aria-hidden="true">
+              <path class="inference-path" d="M10 38h24l10-18 17 36 16-27 12 18h41"/>
+              <circle class="svg-pulse" cx="10" cy="38" r="4"/><circle class="svg-pulse delay-2" cx="130" cy="47" r="4"/>
+              <circle class="inference-packet" cx="0" cy="0" r="3"/>
+            </svg>
+            <a class="button button-primary" href="mailto:dkotnala5@gmail.com">Start a conversation</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="shell footer-inner">
+      <div><a class="brand footer-brand" href="#top"><span class="brand-mark">DK</span><span class="brand-name">Deepankar Kotnala</span></a><p>Data Scientist · Uttarakhand, India</p></div>
+      <div class="footer-links">
+        <a href="mailto:dkotnala5@gmail.com">Email</a>
+        <a href="https://github.com/deepankarkotnala" target="_blank" rel="noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/deepankarkotnala/" target="_blank" rel="noreferrer">LinkedIn</a>
+      </div>
+      <p class="copyright">© <span id="year">2026</span> Deepankar Kotnala. All rights reserved.</p>
+    </div>
+  </footer>
+</body>
+</html>

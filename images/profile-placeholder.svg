@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 860" role="img" aria-label="Deepankar Kotnala placeholder portrait">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#18284a"/>
+      <stop offset="0.52" stop-color="#4c5fd7"/>
+      <stop offset="1" stop-color="#22294b"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="75%" cy="18%" r="70%">
+      <stop offset="0" stop-color="#69dcff" stop-opacity=".65"/>
+      <stop offset="1" stop-color="#69dcff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="800" height="860" rx="72" fill="url(#bg)"/>
+  <rect width="800" height="860" rx="72" fill="url(#glow)"/>
+  <circle cx="400" cy="285" r="142" fill="#d9e1ff" fill-opacity=".2"/>
+  <path d="M133 860c22-219 125-340 267-340s245 121 267 340" fill="#d9e1ff" fill-opacity=".18"/>
+  <circle cx="630" cy="155" r="110" fill="#b274ff" fill-opacity=".16"/>
+  <text x="400" y="735" text-anchor="middle" fill="#fff" font-family="Inter,Arial,sans-serif" font-weight="800" font-size="150" letter-spacing="-8">DK</text>
+</svg>
