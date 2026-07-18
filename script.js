@@ -19,6 +19,19 @@
   const year = document.getElementById('year');
   if (year) year.textContent = new Date().getFullYear();
 
+  const releaseDecorativeMotion = () => root.classList.remove('motion-pending');
+  if (reducedMotion || mobilePerformanceMode.matches) {
+    releaseDecorativeMotion();
+  } else {
+    window.setTimeout(() => {
+      if ('requestIdleCallback' in window) {
+        requestIdleCallback(releaseDecorativeMotion, { timeout: 350 });
+      } else {
+        releaseDecorativeMotion();
+      }
+    }, 650);
+  }
+
   const updateThemeButton = () => {
     const dark = root.dataset.theme === 'dark';
     if (themeButton) {
@@ -120,16 +133,28 @@
   };
   mobilePerformanceMode.addEventListener?.('change', enableMobileContent);
 
-  const currentHashTarget = window.location.hash && document.querySelector(window.location.hash);
+  const motionZones = [...document.querySelectorAll('.hero-visual, .section-art, .skill-card')];
+  if (!reducedMotion && !mobilePerformanceMode.matches && 'IntersectionObserver' in window) {
+    const motionObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => entry.target.classList.toggle('motion-active', entry.isIntersecting));
+    }, { threshold: 0.01, rootMargin: '120px 0px' });
+    motionZones.forEach(zone => motionObserver.observe(zone));
+  }
+
+  const currentHashTarget = window.location.hash ? document.querySelector(window.location.hash) : null;
   currentHashTarget?.querySelectorAll('.reveal, .skill-card').forEach(item => item.classList.add('visible'));
 
   let activeScrollFrame = 0;
 
-  const cancelProgrammaticScroll = () => {
+  const finishProgrammaticScroll = () => {
     if (activeScrollFrame) cancelAnimationFrame(activeScrollFrame);
     activeScrollFrame = 0;
     root.classList.remove('js-scroll-controlled');
     body.classList.remove('is-programmatic-scrolling');
+  };
+
+  const cancelProgrammaticScroll = () => {
+    finishProgrammaticScroll();
   };
 
   const scrollToTarget = target => {
@@ -143,31 +168,29 @@
     const distance = targetY - startY;
 
     if (Math.abs(distance) < 2 || reducedMotion) {
-      root.classList.add('js-scroll-controlled');
-      window.scrollTo(0, targetY);
-      requestAnimationFrame(() => root.classList.remove('js-scroll-controlled'));
+      window.scrollTo({ top: targetY, behavior: 'auto' });
+      finishProgrammaticScroll();
       return;
     }
-
-    const duration = Math.min(500, Math.max(280, 240 + Math.abs(distance) * 0.055));
-    const startedAt = performance.now();
-    const easeInOutCubic = progress => progress < 0.5
-      ? 4 * progress * progress * progress
-      : 1 - Math.pow(-2 * progress + 2, 3) / 2;
 
     root.classList.add('js-scroll-controlled');
     body.classList.add('is-programmatic-scrolling');
 
+    // Move immediately, then ease more gently as the target approaches.
+    // The slightly longer cap keeps multi-section jumps fluid without feeling slow.
+    const duration = Math.min(740, Math.max(450, 395 + Math.abs(distance) * .12));
+    const startedAt = performance.now();
+    const easeOutQuart = progress => 1 - Math.pow(1 - progress, 4);
+
     const step = now => {
       const progress = Math.min(1, (now - startedAt) / duration);
-      window.scrollTo(0, startY + distance * easeInOutCubic(progress));
+      window.scrollTo({ top: startY + distance * easeOutQuart(progress), behavior: 'auto' });
 
       if (progress < 1) {
         activeScrollFrame = requestAnimationFrame(step);
       } else {
-        activeScrollFrame = 0;
-        root.classList.remove('js-scroll-controlled');
-        body.classList.remove('is-programmatic-scrolling');
+        window.scrollTo({ top: targetY, behavior: 'auto' });
+        finishProgrammaticScroll();
       }
     };
 
@@ -183,7 +206,7 @@
       if (!target) return;
 
       event.preventDefault();
-      showAllContent();
+      target.querySelectorAll('.reveal, .skill-card').forEach(item => item.classList.add('visible'));
       body.classList.add('nav-jump');
       closeMenu();
 
@@ -201,22 +224,57 @@
 
   let scrollTicking = false;
   let scrollStopTimer = 0;
+  let geometryFrame = 0;
+  let maxScroll = 1;
+  let sectionStops = [];
+  let activeSection = '';
+  let headerScrolled = false;
+
+  const refreshScrollGeometry = () => {
+    const scrollTop = window.scrollY;
+    maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+    sectionStops = sections.map(section => ({
+      id: section.id,
+      top: section.getBoundingClientRect().top + scrollTop - 130
+    }));
+  };
+
   const updateScrollUI = () => {
     const scrollTop = window.scrollY;
-    const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-    header?.classList.toggle('scrolled', scrollTop > 16);
-    if (progressBar) progressBar.style.transform = `scaleX(${maxScroll > 0 ? scrollTop / maxScroll : 0})`;
+    const nextHeaderScrolled = scrollTop > 16;
 
-    let current = '';
-    for (const section of sections) {
-      if (scrollTop >= section.offsetTop - 130) current = section.id;
+    if (nextHeaderScrolled !== headerScrolled) {
+      headerScrolled = nextHeaderScrolled;
+      header?.classList.toggle('scrolled', headerScrolled);
     }
-    navAnchors.forEach(anchor => anchor.classList.toggle('active', anchor.getAttribute('href') === `#${current}`));
+
+    if (progressBar) progressBar.style.transform = `scaleX(${Math.min(1, scrollTop / maxScroll)})`;
+
+    let current = 'top';
+    for (const section of sectionStops) {
+      if (scrollTop < section.top) break;
+      current = section.id;
+    }
+
+    if (current !== activeSection) {
+      activeSection = current;
+      navAnchors.forEach(anchor => anchor.classList.toggle('active', anchor.getAttribute('href') === `#${current}`));
+    }
+
     scrollTicking = false;
   };
 
+  const scheduleGeometryRefresh = () => {
+    if (geometryFrame) cancelAnimationFrame(geometryFrame);
+    geometryFrame = requestAnimationFrame(() => {
+      geometryFrame = 0;
+      refreshScrollGeometry();
+      updateScrollUI();
+    });
+  };
+
   const onScroll = () => {
-    body.classList.add('is-scrolling');
+    if (!body.classList.contains('is-scrolling')) body.classList.add('is-scrolling');
     window.clearTimeout(scrollStopTimer);
     scrollStopTimer = window.setTimeout(() => body.classList.remove('is-scrolling'), 130);
 
@@ -225,8 +283,13 @@
       scrollTicking = true;
     }
   };
+
+  refreshScrollGeometry();
   updateScrollUI();
   window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', scheduleGeometryRefresh, { passive: true });
+  window.addEventListener('load', scheduleGeometryRefresh, { once: true });
+  document.fonts?.ready.then(scheduleGeometryRefresh);
 
   const staggerGroups = [
     '.skills-grid .skill-card',
@@ -236,11 +299,11 @@
   ];
   staggerGroups.forEach(selector => {
     document.querySelectorAll(selector).forEach((element, index) => {
-      if (!element.dataset.delay) element.style.setProperty('--delay', `${Math.min(index * 55, 220)}ms`);
+      if (!element.dataset.delay) element.style.setProperty('--delay', `${Math.min(index * 42, 168)}ms`);
     });
   });
   document.querySelectorAll('[data-delay]').forEach(element => {
-    element.style.setProperty('--delay', `${Math.min(Number(element.dataset.delay) || 0, 240)}ms`);
+    element.style.setProperty('--delay', `${Math.min(Number(element.dataset.delay) || 0, 190)}ms`);
   });
 
   if (!reducedMotion && finePointer) {
@@ -255,7 +318,7 @@
     });
 
     document.querySelectorAll('.tilt-card').forEach(card => {
-      const maxTilt = card.classList.contains('profile-card') ? 3.2 : 1.25;
+      const maxTilt = card.classList.contains('profile-card') ? 3.8 : 1.25;
       let frame = null;
       card.addEventListener('pointermove', event => {
         if (frame) cancelAnimationFrame(frame);
@@ -263,7 +326,7 @@
           const rect = card.getBoundingClientRect();
           const x = (event.clientX - rect.left) / rect.width - .5;
           const y = (event.clientY - rect.top) / rect.height - .5;
-          card.style.transform = `perspective(1100px) rotateX(${-y * maxTilt}deg) rotateY(${x * maxTilt}deg) translateY(-2px)`;
+          card.style.transform = `perspective(1100px) rotateX(${-y * maxTilt}deg) rotateY(${x * maxTilt}deg) translateY(-3px)`;
         });
       });
       card.addEventListener('pointerleave', () => {

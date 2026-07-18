@@ -24,11 +24,11 @@ Then open `http://localhost:8000`.
 
 ## Deploy
 
-Upload the contents of this folder to the root of a GitHub Pages repository or any static hosting provider.
+Upload the contents of this folder to the root of any static hosting provider.
 
 ## Mobile performance improvements
 
 - Mobile and touch layouts render section content immediately instead of waiting for scroll-triggered reveal effects.
-- In-page navigation uses a short, capped smooth-scroll animation and closes the mobile menu before scrolling.
+- In-page navigation starts promptly, then uses a slightly longer ease-out near each destination; the mobile menu closes before scrolling.
 - Costly backdrop blur and fixed decorative layers are disabled on touch devices.
 - Decorative animations pause while the page is moving to reduce dropped frames.
