@@ -4,9 +4,6 @@
   const header = document.querySelector('.site-header');
   const menuButton = document.querySelector('.menu-toggle');
   const menu = document.querySelector('.nav-links');
-  const themeButton = document.querySelector('.theme-toggle');
-  const themeLabel = themeButton?.querySelector('.theme-label');
-  const themeMeta = document.querySelector('meta[name="theme-color"]');
   const progressBar = document.querySelector('.scroll-progress span');
   const navAnchors = [...document.querySelectorAll('.nav-links a[href^="#"]')];
   const internalAnchors = [...document.querySelectorAll('a[href^="#"]')];
@@ -32,24 +29,6 @@
     }, 650);
   }
 
-  const updateThemeButton = () => {
-    const dark = root.dataset.theme === 'dark';
-    if (themeButton) {
-      themeButton.setAttribute('aria-pressed', String(dark));
-      themeButton.setAttribute('aria-label', dark ? 'Switch to light mode' : 'Switch to dark mode');
-    }
-    if (themeLabel) themeLabel.textContent = dark ? 'Light' : 'Dark';
-    if (themeMeta) themeMeta.content = dark ? '#111925' : '#e9eef5';
-  };
-
-  updateThemeButton();
-
-  themeButton?.addEventListener('click', () => {
-    const nextTheme = root.dataset.theme === 'dark' ? 'light' : 'dark';
-    root.dataset.theme = nextTheme;
-    try { localStorage.setItem('portfolio-theme', nextTheme); } catch (_) {}
-    updateThemeButton();
-  });
 
   const backdrop = document.querySelector('.nav-backdrop');
   let lastFocusedBeforeMenu = null;
@@ -109,31 +88,29 @@
   syncMobileMenuState();
 
   const showAllContent = () => revealItems.forEach(item => item.classList.add('visible'));
+  const replayRevealItems = new Set(document.querySelectorAll('.glass.reveal, .timeline-item.reveal, .hero-visual.reveal'));
   let revealObserver = null;
 
-  if (reducedMotion || mobilePerformanceMode.matches || !('IntersectionObserver' in window)) {
+  if (reducedMotion || !('IntersectionObserver' in window)) {
     showAllContent();
   } else {
     revealObserver = new IntersectionObserver(entries => {
       entries.forEach(entry => {
+        const item = entry.target;
         if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-          revealObserver?.unobserve(entry.target);
+          item.classList.add('visible');
+          if (!replayRevealItems.has(item)) revealObserver?.unobserve(item);
+        } else if (replayRevealItems.has(item)) {
+          // Reset only after the card leaves the viewport so the same rise-in
+          // transition plays again the next time the user scrolls back to it.
+          item.classList.remove('visible');
         }
       });
     }, { threshold: 0.075, rootMargin: '0px 0px -22px' });
     revealItems.forEach(item => revealObserver.observe(item));
   }
 
-  const enableMobileContent = event => {
-    if (!event.matches) return;
-    revealObserver?.disconnect();
-    revealObserver = null;
-    showAllContent();
-  };
-  mobilePerformanceMode.addEventListener?.('change', enableMobileContent);
-
-  const motionZones = [...document.querySelectorAll('.hero-visual, .section-art, .skill-card')];
+  const motionZones = [...document.querySelectorAll('.hero-visual, .section-art')];
   if (!reducedMotion && !mobilePerformanceMode.matches && 'IntersectionObserver' in window) {
     const motionObserver = new IntersectionObserver(entries => {
       entries.forEach(entry => entry.target.classList.toggle('motion-active', entry.isIntersecting));
@@ -206,7 +183,6 @@
       if (!target) return;
 
       event.preventDefault();
-      target.querySelectorAll('.reveal, .skill-card').forEach(item => item.classList.add('visible'));
       body.classList.add('nav-jump');
       closeMenu();
 
@@ -306,19 +282,12 @@
     element.style.setProperty('--delay', `${Math.min(Number(element.dataset.delay) || 0, 190)}ms`);
   });
 
+  // Keep one subtle tilt interaction on the hero card only.
+  // Avoid per-card pointer tracking across all glass panels to reduce main-thread work.
   if (!reducedMotion && finePointer) {
-    document.querySelectorAll('.glass').forEach(card => {
-      card.addEventListener('pointermove', event => {
-        const rect = card.getBoundingClientRect();
-        const x = ((event.clientX - rect.left) / rect.width) * 100;
-        const y = ((event.clientY - rect.top) / rect.height) * 100;
-        card.style.setProperty('--glow-x', `${x}%`);
-        card.style.setProperty('--glow-y', `${y}%`);
-      });
-    });
-
-    document.querySelectorAll('.tilt-card').forEach(card => {
-      const maxTilt = card.classList.contains('profile-card') ? 3.8 : 1.25;
+    const card = document.querySelector('.profile-card.tilt-card');
+    if (card) {
+      const maxTilt = 2.2;
       let frame = null;
       card.addEventListener('pointermove', event => {
         if (frame) cancelAnimationFrame(frame);
@@ -326,13 +295,13 @@
           const rect = card.getBoundingClientRect();
           const x = (event.clientX - rect.left) / rect.width - .5;
           const y = (event.clientY - rect.top) / rect.height - .5;
-          card.style.transform = `perspective(1100px) rotateX(${-y * maxTilt}deg) rotateY(${x * maxTilt}deg) translateY(-3px)`;
+          card.style.transform = `perspective(1100px) rotateX(${-y * maxTilt}deg) rotateY(${x * maxTilt}deg) translateY(-2px)`;
         });
       });
       card.addEventListener('pointerleave', () => {
         if (frame) cancelAnimationFrame(frame);
         card.style.transform = 'perspective(1100px) rotateX(0) rotateY(0) translateY(0)';
       });
-    });
+    }
   }
 })();
