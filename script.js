@@ -110,7 +110,7 @@
     revealItems.forEach(item => revealObserver.observe(item));
   }
 
-  const motionZones = [...document.querySelectorAll('.hero-visual, .section-art')];
+  const motionZones = [...document.querySelectorAll('.hero-visual, .section-art, .contact-signal')];
   if (!reducedMotion && !mobilePerformanceMode.matches && 'IntersectionObserver' in window) {
     const motionObserver = new IntersectionObserver(entries => {
       entries.forEach(entry => entry.target.classList.toggle('motion-active', entry.isIntersecting));

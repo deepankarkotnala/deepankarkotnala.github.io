@@ -711,13 +711,15 @@ html.motion-pending .scroll-cue span::before {
 /* Only animate decorative regions while they are near the viewport. */
 .section-art *,
 .hero-visual .orbit,
-.hero-visual .hero-network * {
+.hero-visual .hero-network *,
+.contact-signal * {
   animation-play-state: paused;
 }
 
 .section-art.motion-active *,
 .hero-visual.motion-active .orbit,
-.hero-visual.motion-active .hero-network * {
+.hero-visual.motion-active .hero-network *,
+.contact-signal.motion-active * {
   animation-play-state: running;
 }
 
@@ -738,11 +740,13 @@ body.is-scrolling .ambient,
 body.is-scrolling .orbit,
 body.is-scrolling .hero-network *,
 body.is-scrolling .section-art *,
+body.is-scrolling .contact-signal *,
 body.is-scrolling .status-dot,
 body.is-programmatic-scrolling .ambient,
 body.is-programmatic-scrolling .orbit,
 body.is-programmatic-scrolling .hero-network *,
 body.is-programmatic-scrolling .section-art *,
+body.is-programmatic-scrolling .contact-signal *,
 body.is-programmatic-scrolling .status-dot {
   animation-play-state: paused !important;
 }
@@ -759,6 +763,7 @@ body.is-programmatic-scrolling .status-dot {
   .orbit,
   .hero-network *,
   .section-art *,
+  .contact-signal *,
   .status-dot,
   .scroll-cue span::before {
     animation: none !important;
@@ -790,7 +795,8 @@ body.is-programmatic-scrolling .status-dot {
   .glass { background: var(--surface-solid); }
 
   .section-art,
-  .hero-network {
+  .hero-network,
+  .contact-signal {
     filter: none;
   }
 
@@ -1006,6 +1012,7 @@ body.is-programmatic-scrolling .status-dot {
 
 /* Final play-state overrides must come after the illustration animation shorthands. */
 .section-art:not(.motion-active) *,
+.contact-signal:not(.motion-active) *,
 .section-art:not(.motion-active)::before,
 .section-art:not(.motion-active)::after,
 .hero-visual:not(.motion-active) .orbit,
@@ -1013,6 +1020,7 @@ body.is-programmatic-scrolling .status-dot {
   animation-play-state: paused;
 }
 .section-art.motion-active *,
+.contact-signal.motion-active *,
 .section-art.motion-active::before,
 .section-art.motion-active::after,
 .hero-visual.motion-active .orbit,
@@ -1047,6 +1055,7 @@ body:is(.is-scrolling, .is-programmatic-scrolling) .section::before {
 }
 body:is(.is-scrolling, .is-programmatic-scrolling) .hero-network,
 body:is(.is-scrolling, .is-programmatic-scrolling) .section-art,
+body:is(.is-scrolling, .is-programmatic-scrolling) .contact-signal,
 body:is(.is-scrolling, .is-programmatic-scrolling) .data-packet,
 body:is(.is-scrolling, .is-programmatic-scrolling) .workflow-packet,
 body:is(.is-scrolling, .is-programmatic-scrolling) .inference-packet {
