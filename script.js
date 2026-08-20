@@ -3,6 +3,8 @@
   const body = document.body;
   const header = document.querySelector('.site-header');
   const menuButton = document.querySelector('.menu-toggle');
+  const themeButton = document.querySelector('.theme-toggle');
+  const themeColorMeta = document.querySelector('meta[name="theme-color"]');
   const menu = document.querySelector('.nav-links');
   const progressBar = document.querySelector('.scroll-progress span');
   const navAnchors = [...document.querySelectorAll('.nav-links a[href^="#"]')];
@@ -15,6 +17,28 @@
 
   const year = document.getElementById('year');
   if (year) year.textContent = new Date().getFullYear();
+
+  const applyTheme = (theme, { persist = false } = {}) => {
+    const nextTheme = theme === 'dark' ? 'dark' : 'light';
+    const isDark = nextTheme === 'dark';
+    root.dataset.theme = nextTheme;
+    themeButton?.setAttribute('aria-pressed', String(isDark));
+    themeButton?.setAttribute('aria-label', isDark ? 'Switch to light mode' : 'Switch to dark mode');
+    themeButton?.setAttribute('title', isDark ? 'Switch to light mode' : 'Switch to dark mode');
+    themeColorMeta?.setAttribute('content', isDark ? '#0b1020' : '#e9eef5');
+
+    if (persist) {
+      try { localStorage.setItem('portfolio-theme', nextTheme); } catch (_) {}
+    }
+  };
+
+  applyTheme(root.dataset.theme);
+  themeButton?.addEventListener('click', () => {
+    applyTheme(root.dataset.theme === 'dark' ? 'light' : 'dark', { persist: true });
+  });
+  window.addEventListener('storage', event => {
+    if (event.key === 'portfolio-theme') applyTheme(event.newValue === 'dark' ? 'dark' : 'light');
+  });
 
   const releaseDecorativeMotion = () => root.classList.remove('motion-pending');
   if (reducedMotion || mobilePerformanceMode.matches) {
@@ -110,7 +134,7 @@
     revealItems.forEach(item => revealObserver.observe(item));
   }
 
-  const motionZones = [...document.querySelectorAll('.hero-visual, .section-art, .contact-signal')];
+  const motionZones = [...document.querySelectorAll('.hero-visual, .section-art')];
   if (!reducedMotion && !mobilePerformanceMode.matches && 'IntersectionObserver' in window) {
     const motionObserver = new IntersectionObserver(entries => {
       entries.forEach(entry => entry.target.classList.toggle('motion-active', entry.isIntersecting));

@@ -4,7 +4,7 @@ A responsive, dependency-light portfolio built with HTML, CSS, and vanilla JavaS
 
 ## Design system
 
-- Light-only visual theme for simpler rendering and a consistent presentation
+- Light theme by default, with a persistent light/dark mode toggle in the navigation
 - Layered glass surfaces with backdrop blur, edge highlights, and pointer-reactive glow
 - Compact, information-dense section layouts
 - Circular profile portrait without a surrounding square image frame
