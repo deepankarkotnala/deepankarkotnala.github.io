@@ -18,9 +18,19 @@
   const year = document.getElementById('year');
   if (year) year.textContent = new Date().getFullYear();
 
-  const applyTheme = (theme, { persist = false } = {}) => {
+  let themeTransitionTimer = null;
+  const applyTheme = (theme, { persist = false, animate = false } = {}) => {
     const nextTheme = theme === 'dark' ? 'dark' : 'light';
     const isDark = nextTheme === 'dark';
+
+    if (animate && !reducedMotion) {
+      root.classList.add('theme-transitioning');
+      window.clearTimeout(themeTransitionTimer);
+      themeTransitionTimer = window.setTimeout(() => {
+        root.classList.remove('theme-transitioning');
+      }, 700);
+    }
+
     root.dataset.theme = nextTheme;
     themeButton?.setAttribute('aria-pressed', String(isDark));
     themeButton?.setAttribute('aria-label', isDark ? 'Switch to light mode' : 'Switch to dark mode');
@@ -32,12 +42,12 @@
     }
   };
 
-  applyTheme(root.dataset.theme);
+  applyTheme(root.dataset.theme || 'light');
   themeButton?.addEventListener('click', () => {
-    applyTheme(root.dataset.theme === 'dark' ? 'light' : 'dark', { persist: true });
+    applyTheme(root.dataset.theme === 'dark' ? 'light' : 'dark', { persist: true, animate: true });
   });
   window.addEventListener('storage', event => {
-    if (event.key === 'portfolio-theme') applyTheme(event.newValue === 'dark' ? 'dark' : 'light');
+    if (event.key === 'portfolio-theme') applyTheme(event.newValue === 'dark' ? 'dark' : 'light', { animate: true });
   });
 
   const releaseDecorativeMotion = () => root.classList.remove('motion-pending');
@@ -101,6 +111,15 @@
 
   backdrop?.addEventListener('click', () => closeMenu({ restoreFocus: true }));
 
+  document.addEventListener('click', event => {
+    if (menu?.classList.contains('open')) {
+      const target = event.target;
+      if (target instanceof Node && !menu.contains(target) && !menuButton?.contains(target)) {
+        closeMenu({ restoreFocus: true });
+      }
+    }
+  });
+
   document.addEventListener('keydown', event => {
     if (event.key === 'Escape' && menu?.classList.contains('open')) {
       event.preventDefault();
@@ -152,6 +171,9 @@
     activeScrollFrame = 0;
     root.classList.remove('js-scroll-controlled');
     body.classList.remove('is-programmatic-scrolling');
+    header?.classList.remove('header-hidden');
+    headerHidden = false;
+    lastScrollY = window.scrollY;
   };
 
   const cancelProgrammaticScroll = () => {
@@ -229,6 +251,8 @@
   let sectionStops = [];
   let activeSection = '';
   let headerScrolled = false;
+  let lastScrollY = window.scrollY;
+  let headerHidden = false;
 
   const refreshScrollGeometry = () => {
     const scrollTop = window.scrollY;
@@ -240,13 +264,41 @@
   };
 
   const updateScrollUI = () => {
-    const scrollTop = window.scrollY;
+    const scrollTop = Math.max(0, window.scrollY);
     const nextHeaderScrolled = scrollTop > 16;
 
     if (nextHeaderScrolled !== headerScrolled) {
       headerScrolled = nextHeaderScrolled;
       header?.classList.toggle('scrolled', headerScrolled);
     }
+
+    // Auto-hide navigation bar on scroll down, slide back in on scroll up
+    const isMenuOpen = menuButton?.getAttribute('aria-expanded') === 'true';
+    if (!isMenuOpen) {
+      const scrollDiff = scrollTop - lastScrollY;
+      if (scrollTop <= 40) {
+        if (headerHidden) {
+          headerHidden = false;
+          header?.classList.remove('header-hidden');
+        }
+      } else if (scrollDiff > 8 && scrollTop > 60) {
+        // Scrolling down -> slide away
+        if (!headerHidden) {
+          headerHidden = true;
+          header?.classList.add('header-hidden');
+        }
+      } else if (scrollDiff < -5) {
+        // Scrolling up -> slide back in
+        if (headerHidden) {
+          headerHidden = false;
+          header?.classList.remove('header-hidden');
+        }
+      }
+    } else if (headerHidden) {
+      headerHidden = false;
+      header?.classList.remove('header-hidden');
+    }
+    lastScrollY = scrollTop;
 
     if (progressBar) progressBar.style.transform = `scaleX(${Math.min(1, scrollTop / maxScroll)})`;
 
@@ -293,6 +345,7 @@
 
   const staggerGroups = [
     '.skills-grid .skill-card',
+    '.tools-grid .tool-group-card',
     '.timeline .timeline-item',
     '.education-grid .education-card',
     '.recognition-grid .recognition-card'
@@ -313,9 +366,13 @@
     if (card) {
       const maxTilt = 2.2;
       let frame = null;
+      card.addEventListener('pointerenter', () => {
+        card.style.transition = 'transform 1200ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 1200ms cubic-bezier(0.16, 1, 0.3, 1), border-color 1000ms cubic-bezier(0.16, 1, 0.3, 1)';
+      });
       card.addEventListener('pointermove', event => {
         if (frame) cancelAnimationFrame(frame);
         frame = requestAnimationFrame(() => {
+          card.style.transition = 'transform 180ms ease-out, box-shadow 1200ms cubic-bezier(0.16, 1, 0.3, 1), border-color 1000ms cubic-bezier(0.16, 1, 0.3, 1)';
           const rect = card.getBoundingClientRect();
           const x = (event.clientX - rect.left) / rect.width - .5;
           const y = (event.clientY - rect.top) / rect.height - .5;
@@ -324,6 +381,7 @@
       });
       card.addEventListener('pointerleave', () => {
         if (frame) cancelAnimationFrame(frame);
+        card.style.transition = 'transform 1200ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 1200ms cubic-bezier(0.16, 1, 0.3, 1), border-color 1000ms cubic-bezier(0.16, 1, 0.3, 1)';
         card.style.transform = 'perspective(1100px) rotateX(0) rotateY(0) translateY(0)';
       });
     }

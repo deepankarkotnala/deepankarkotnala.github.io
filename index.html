@@ -24,8 +24,6 @@
 </head>
 <body id="top">
   <div class="scroll-progress" aria-hidden="true"><span></span></div>
-  <div class="ambient ambient-one" aria-hidden="true"></div>
-  <div class="ambient ambient-two" aria-hidden="true"></div>
   <div class="noise" aria-hidden="true"></div>
 
   <header class="site-header" id="site-header">
@@ -92,22 +90,46 @@
             <circle class="svg-pulse" cx="68" cy="232" r="5"/><circle class="svg-pulse delay-1" cx="348" cy="128" r="5"/><circle class="svg-pulse delay-2" cx="268" cy="342" r="5"/>
           </svg>
           <article class="profile-card glass tilt-card">
-            <div class="profile-glow" aria-hidden="true"></div>
             <div class="profile-avatar-wrap">
               <a class="profile-image" href="https://www.linkedin.com/in/deepankarkotnala/" target="_blank" rel="noreferrer" aria-label="Open Deepankar Kotnala's LinkedIn profile">
                 <img src="images/profile.jpg" onerror="this.onerror=null;this.src='images/profile-placeholder.svg'" alt="Deepankar Kotnala" width="460" height="460" loading="eager" fetchpriority="high" decoding="async">
               </a>
               <span class="profile-status" aria-hidden="true"></span>
             </div>
-            <div class="profile-content">
-              <div>
-                <p class="micro-label">Based in</p>
-                <p>Uttarakhand, India</p>
+            <div class="profile-location">
+              <div class="location-kicker">
+                <svg class="location-pin-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+                <span>Based in</span>
               </div>
-              <span class="availability">Open to connect</span>
+              <p class="location-text">Uttarakhand, India</p>
             </div>
             <div class="profile-tags" aria-label="Specializations">
-              <span>AI Agents</span><span>RAG</span><span>ML</span><span>FastAPI</span>
+              <span class="tag-pill">
+                <svg class="pill-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a4.5 4.5 0 0 0-4.24 3A4 4 0 0 0 4 10a4 4 0 0 0 1.2 2.8A4.5 4.5 0 0 0 4.5 17 4.5 4.5 0 0 0 9 21.5c1 0 1.95-.33 2.72-.9A4.47 4.47 0 0 0 14.5 21.5a4.5 4.5 0 0 0 4.5-4.5 4.5 4.5 0 0 0-.7-2.3 4 4 0 0 0 1.7-3.2 4 4 0 0 0-3.76-4A4.5 4.5 0 0 0 12 3z"/></svg>
+                <span>AI/ML</span>
+              </span>
+              <span class="tag-pill">
+                <svg class="pill-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="14" y2="17"/></svg>
+                <span>RAG</span>
+              </span>
+              <span class="tag-pill">
+                <svg class="pill-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="8" width="16" height="12" rx="3.5"/><path d="M12 2v6"/><circle cx="12" cy="2" r="1"/><path d="M2 14h2M20 14h2"/><circle cx="9" cy="13" r="1.5" fill="currentColor"/><circle cx="15" cy="13" r="1.5" fill="currentColor"/><line x1="9" y1="17" x2="15" y2="17"/></svg>
+                <span>AI Agents</span>
+              </span>
+              <span class="tag-pill">
+                <svg class="pill-icon" viewBox="0 0 24 24" aria-hidden="true"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                <span>Python</span>
+              </span>
+              <span class="tag-pill">
+                <svg class="pill-icon" viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v6c0 1.66 3.58 3 8 3s8-1.34 8-3V5"/><path d="M4 11v6c0 1.66 3.58 3 8 3s8-1.34 8-3v-6"/></svg>
+                <span>SQL</span>
+              </span>
+            </div>
+            <div class="profile-footer">
+              <a class="availability" href="https://wa.me/918454983402" target="_blank" rel="noreferrer" aria-label="Chat on WhatsApp with Deepankar Kotnala">
+                <svg class="whatsapp-icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" stroke="none" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+                <span>Open to connect</span>
+              </a>
             </div>
           </article>
         </div>
@@ -120,7 +142,7 @@
         <div class="section-heading reveal">
           <div class="heading-copy">
             <p class="kicker">01 / About</p>
-            <h2 id="about-title">Engineering AI systems that work beyond the prototype.</h2>
+            <h2 id="about-title">Engineering AI Systems That Work Beyond the Prototype.</h2>
           </div>
           <div class="section-art art-about" aria-hidden="true">
             <svg class="ai-diagram neural-diagram neural-diagram-deep" viewBox="0 0 280 150">
@@ -201,16 +223,134 @@
         </div>
 
         <div class="skills-grid">
-          <article class="skill-card glass reveal" style="--level:95%;--level-scale:0.95"><div class="skill-top"><h3>AI Agent Engineering</h3><span>95%</span></div><div class="meter"><i></i></div></article>
-          <article class="skill-card glass reveal" style="--level:92%;--level-scale:0.92" data-delay="40"><div class="skill-top"><h3>Multi-Agent Systems &amp; Workflow Orchestration</h3><span>92%</span></div><div class="meter"><i></i></div></article>
-          <article class="skill-card glass reveal" style="--level:95%;--level-scale:0.95" data-delay="80"><div class="skill-top"><h3>Enterprise RAG Architecture</h3><span>95%</span></div><div class="meter"><i></i></div></article>
-          <article class="skill-card glass reveal" style="--level:92%;--level-scale:0.92" data-delay="120"><div class="skill-top"><h3>API &amp; Backend Engineering <small>FastAPI, REST</small></h3><span>92%</span></div><div class="meter"><i></i></div></article>
-          <article class="skill-card glass reveal" style="--level:95%;--level-scale:0.95"><div class="skill-top"><h3>LLM Application Development</h3><span>95%</span></div><div class="meter"><i></i></div></article>
-          <article class="skill-card glass reveal" style="--level:88%;--level-scale:0.88" data-delay="40"><div class="skill-top"><h3>AI Evaluation &amp; Guardrails</h3><span>88%</span></div><div class="meter"><i></i></div></article>
-          <article class="skill-card glass reveal" style="--level:90%;--level-scale:0.90" data-delay="80"><div class="skill-top"><h3>Production AI Deployment</h3><span>90%</span></div><div class="meter"><i></i></div></article>
-          <article class="skill-card glass reveal" style="--level:90%;--level-scale:0.90" data-delay="120"><div class="skill-top"><h3>Tool Calling, MCP &amp; Enterprise Integrations</h3><span>90%</span></div><div class="meter"><i></i></div></article>
-          <article class="skill-card glass reveal" style="--level:90%;--level-scale:0.90"><div class="skill-top"><h3>Context Engineering</h3><span>90%</span></div><div class="meter"><i></i></div></article>
-          <article class="skill-card glass reveal" style="--level:88%;--level-scale:0.88" data-delay="40"><div class="skill-top"><h3>AI Infrastructure <small>Docker, Linux, Databases</small></h3><span>88%</span></div><div class="meter"><i></i></div></article>
+          <article class="skill-card glass reveal">
+            <div class="skill-top"><h3>AI Agent Engineering</h3></div>
+            <div class="meter"><i></i></div>
+          </article>
+          <article class="skill-card glass reveal" data-delay="40">
+            <div class="skill-top"><h3>Multi-Agent Systems &amp; Workflow Orchestration</h3></div>
+            <div class="meter"><i></i></div>
+          </article>
+          <article class="skill-card glass reveal" data-delay="80">
+            <div class="skill-top"><h3>Enterprise RAG Architecture</h3></div>
+            <div class="meter"><i></i></div>
+          </article>
+          <article class="skill-card glass reveal" data-delay="120">
+            <div class="skill-top"><h3>API &amp; Backend Engineering</h3></div>
+            <div class="meter"><i></i></div>
+          </article>
+          <article class="skill-card glass reveal">
+            <div class="skill-top"><h3>LLM Application Development</h3></div>
+            <div class="meter"><i></i></div>
+          </article>
+          <article class="skill-card glass reveal" data-delay="40">
+            <div class="skill-top"><h3>AI Evaluation &amp; Guardrails</h3></div>
+            <div class="meter"><i></i></div>
+          </article>
+          <article class="skill-card glass reveal" data-delay="80">
+            <div class="skill-top"><h3>Production AI Deployment</h3></div>
+            <div class="meter"><i></i></div>
+          </article>
+          <article class="skill-card glass reveal" data-delay="120">
+            <div class="skill-top"><h3>Tool Calling, MCP &amp; Enterprise Integrations</h3></div>
+            <div class="meter"><i></i></div>
+          </article>
+          <article class="skill-card glass reveal">
+            <div class="skill-top"><h3>Context Engineering</h3></div>
+            <div class="meter"><i></i></div>
+          </article>
+          <article class="skill-card glass reveal" data-delay="40">
+            <div class="skill-top"><h3>AI Infrastructure</h3></div>
+            <div class="meter"><i></i></div>
+          </article>
+        </div>
+
+        <div class="stack-subheading reveal" data-delay="30">
+          <div class="heading-copy">
+            <p class="kicker">Frameworks &amp; Tooling</p>
+            <h3 id="stack-title">Technologies powering production AI.</h3>
+            <p>Battle-tested frameworks, containerized runtimes, and vector stores leveraged across production systems.</p>
+          </div>
+        </div>
+
+        <div class="tools-grid">
+          <article class="tool-group-card glass reveal" data-delay="40">
+            <div class="tool-group-header">
+              <span class="tool-group-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><circle cx="6" cy="6" r="3"/><circle cx="18" cy="6" r="3"/><circle cx="12" cy="18" r="3"/><path d="M8.5 6h7M7.5 8.5l3 6.5M16.5 8.5l-3 6.5"/></svg>
+              </span>
+              <div>
+                <h4>Agentic &amp; LLM Frameworks</h4>
+                <p>Multi-agent orchestration, state machines &amp; tool calling</p>
+              </div>
+            </div>
+            <div class="tool-tags" aria-label="Agentic and LLM Frameworks">
+              <span class="tool-tag">LangGraph</span>
+              <span class="tool-tag">LangChain</span>
+              <span class="tool-tag">LlamaIndex</span>
+              <span class="tool-tag">Model Context Protocol (MCP)</span>
+              <span class="tool-tag">Multi-Agent Systems</span>
+              <span class="tool-tag">Context Engineering</span>
+            </div>
+          </article>
+
+          <article class="tool-group-card glass reveal" data-delay="80">
+            <div class="tool-group-header">
+              <span class="tool-group-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4M6 8l3 3-3 3M11 14h4"/></svg>
+              </span>
+              <div>
+                <h4>Backend &amp; API Engineering</h4>
+                <p>High-throughput asynchronous APIs &amp; model serving</p>
+              </div>
+            </div>
+            <div class="tool-tags" aria-label="Backend and API Engineering">
+              <span class="tool-tag">FastAPI</span>
+              <span class="tool-tag">Flask</span>
+              <span class="tool-tag">Pydantic</span>
+              <span class="tool-tag">Uvicorn</span>
+              <span class="tool-tag">RESTful APIs</span>
+              <span class="tool-tag">WebSockets</span>
+            </div>
+          </article>
+
+          <article class="tool-group-card glass reveal" data-delay="120">
+            <div class="tool-group-header">
+              <span class="tool-group-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><path d="M3.27 6.96L12 12.01l8.73-5.05M12 22.08V12"/></svg>
+              </span>
+              <div>
+                <h4>Containers &amp; AI Infrastructure</h4>
+                <p>Containerization, rootless runtimes &amp; GPU hardware</p>
+              </div>
+            </div>
+            <div class="tool-tags" aria-label="Containers and AI Infrastructure">
+              <span class="tool-tag">Docker</span>
+              <span class="tool-tag">Podman</span>
+              <span class="tool-tag">Linux / Bash</span>
+              <span class="tool-tag">NVIDIA DGX &amp; Jetson</span>
+              <span class="tool-tag">CUDA &amp; GPU Workflows</span>
+              <span class="tool-tag">Docker Compose</span>
+            </div>
+          </article>
+
+          <article class="tool-group-card glass reveal" data-delay="160">
+            <div class="tool-group-header">
+              <span class="tool-group-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+              </span>
+              <div>
+                <h4>Vector Databases &amp; Data Systems</h4>
+                <p>Dense retrieval, embedding stores &amp; enterprise platforms</p>
+              </div>
+            </div>
+            <div class="tool-tags" aria-label="Vector Databases and Data Systems">
+              <span class="tool-tag">ChromaDB</span>
+              <span class="tool-tag">Qdrant</span>
+              <span class="tool-tag">PostgreSQL / pgvector</span>
+              <span class="tool-tag">MySQL / Oracle DB</span>
+            </div>
+          </article>
         </div>
       </div>
     </section>
@@ -239,7 +379,13 @@
             <div class="experience-card glass">
               <header>
                 <div><h3>Senior Consultant</h3><p>TCG Digital</p></div>
-                <div class="experience-header-meta"><div class="date-pill current-date">Aug 2022 — Present <span>Current role</span></div><span class="company-index">01</span></div>
+                <div class="experience-header-meta">
+                  <div class="experience-pills">
+                    <span class="date-pill">Aug 2022 — Present</span>
+                    <span class="role-pill current-pill"><span class="role-status-dot" aria-hidden="true"></span>Current role</span>
+                  </div>
+                  <span class="company-index">01</span>
+                </div>
               </header>
               <div class="project">
                 <h4>Oil &amp; Gas Plant Digital Twin <span>Digitization Project</span></h4>
@@ -273,7 +419,12 @@
             <div class="experience-card glass">
               <header>
                 <div><h3>Data Analyst</h3><p>Genpact India</p></div>
-                <div class="experience-header-meta"><div class="date-pill">Oct 2020 — Aug 2022</div><span class="company-index">02</span></div>
+                <div class="experience-header-meta">
+                  <div class="experience-pills">
+                    <span class="date-pill">Oct 2020 — Aug 2022</span>
+                  </div>
+                  <span class="company-index">02</span>
+                </div>
               </header>
               <div class="project">
                 <ul>
@@ -282,7 +433,7 @@
                   <li>Worked with stakeholders to build performance measurement <strong>dashboards</strong> and analyze target audiences.</li>
                   <li>Developed the <strong>technical flow, architecture, and code</strong> for complex campaigns using Python and SQL.</li>
                   <li>Applied <strong>automation</strong> techniques to reduce data latency and improve integration.</li>
-                  <li>Created a data pipeline to migrate data from GCP to Teradata using <strong>Python</strong> and <strong>BigQuery</strong>.</li>
+                  <li>Created a data pipeline to migrate data to <strong>MySQL / Oracle DB</strong> using <strong>Python</strong> and <strong>SQL</strong>.</li>
                   <li>Recommended process improvements for better data quality and effectiveness after working with business analysts.</li>
                 </ul>
               </div>
@@ -294,7 +445,12 @@
             <div class="experience-card glass">
               <header>
                 <div><h3>Machine Learning Engineer</h3><p>SmartCow AI Technologies</p></div>
-                <div class="experience-header-meta"><div class="date-pill">Oct 2019 — Feb 2020</div><span class="company-index">03</span></div>
+                <div class="experience-header-meta">
+                  <div class="experience-pills">
+                    <span class="date-pill">Oct 2019 — Feb 2020</span>
+                  </div>
+                  <span class="company-index">03</span>
+                </div>
               </header>
               <div class="project">
                 <ul>
@@ -316,7 +472,12 @@
             <div class="experience-card glass">
               <header>
                 <div><h3>Associate Consultant</h3><p>Capgemini India</p></div>
-                <div class="experience-header-meta"><div class="date-pill">Feb 2016 — Apr 2019</div><span class="company-index">04</span></div>
+                <div class="experience-header-meta">
+                  <div class="experience-pills">
+                    <span class="date-pill">Feb 2016 — Apr 2019</span>
+                  </div>
+                  <span class="company-index">04</span>
+                </div>
               </header>
               <div class="project">
                 <h4>Data Analysis</h4>
