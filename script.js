@@ -155,6 +155,12 @@
 
   const motionZones = [...document.querySelectorAll('.hero-visual, .section-art')];
   if (!reducedMotion && !mobilePerformanceMode.matches && 'IntersectionObserver' in window) {
+    // Flag that the observer is live. The CSS pause rules key off this class,
+    // so decorative motion is only ever gated when something is actually
+    // toggling .motion-active -- otherwise (mobile perf mode, reduced motion,
+    // no IntersectionObserver) the animations must be left to run untouched
+    // rather than paused forever.
+    root.classList.add('motion-gated');
     const motionObserver = new IntersectionObserver(entries => {
       entries.forEach(entry => entry.target.classList.toggle('motion-active', entry.isIntersecting));
     }, { threshold: 0.01, rootMargin: '120px 0px' });
