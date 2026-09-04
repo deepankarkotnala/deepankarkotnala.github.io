@@ -228,6 +228,16 @@
   currentHashTarget?.querySelectorAll('.reveal, .skill-card').forEach(item => item.classList.add('visible'));
 
   let activeScrollFrame = 0;
+  // Timestamp of the most recent programmatic scroll start. Touch
+  // events arriving within the grace window below are treated as
+  // part of the tap that triggered the scroll, not as a new gesture.
+  let programmaticScrollStartedAt = 0;
+  // Android Chrome commonly emits a second touchstart just after the
+  // click that starts the scroll -- from the tap's residual sequence,
+  // and from the menu closing (which releases body.menu-open's
+  // `overflow:hidden; touch-action:none`, retargeting the gesture).
+  // iOS does not, which is why the jump only showed up on Android.
+  const TOUCH_GRACE_MS = 220;
 
   const finishProgrammaticScroll = () => {
     if (activeScrollFrame) cancelAnimationFrame(activeScrollFrame);
@@ -243,14 +253,22 @@
     finishProgrammaticScroll();
   };
 
+  // Where the given target should sit once scrolled to, measured live.
+  // Called every frame during an animated scroll -- see the note in
+  // scrollToTarget about content-visibility reflow.
+  const measureTargetY = target => {
+    if (target === body) return 0;
+    const maxY = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+    const offset = Math.ceil(header?.getBoundingClientRect().height || 58) + 18;
+    const y = target.getBoundingClientRect().top + window.scrollY - offset;
+    return Math.min(Math.max(0, y), maxY);
+  };
+
   const scrollToTarget = target => {
     cancelProgrammaticScroll();
 
     const startY = window.scrollY;
-    const headerOffset = Math.ceil(header?.getBoundingClientRect().height || 58) + 18;
-    const rawTargetY = target === body ? 0 : target.getBoundingClientRect().top + startY - headerOffset;
-    const maxTargetY = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
-    const targetY = Math.min(Math.max(0, rawTargetY), maxTargetY);
+    const targetY = measureTargetY(target);
     const distance = targetY - startY;
 
     if (Math.abs(distance) < 2 || reducedMotion) {
@@ -261,6 +279,7 @@
 
     root.classList.add('js-scroll-controlled');
     body.classList.add('is-programmatic-scrolling');
+    programmaticScrollStartedAt = performance.now();
 
     // Move immediately, then ease more gently as the target approaches.
     // The slightly longer cap keeps multi-section jumps fluid without feeling slow.
@@ -268,14 +287,26 @@
     const startedAt = performance.now();
     const easeOutQuart = progress => 1 - Math.pow(1 - progress, 4);
 
+    // The destination is re-measured every frame rather than trusted
+    // from the start. `main > section` uses content-visibility:auto
+    // with contain-intrinsic-size: auto 900px, so every not-yet-
+    // rendered section below us is a 900px *estimate*. Passing one
+    // resolves it to its real height and reflows the document, which
+    // moves the target mid-flight -- landing short of, or past, the
+    // section. Re-reading keeps the easing aimed at where the section
+    // actually is now.
     const step = now => {
       const progress = Math.min(1, (now - startedAt) / duration);
-      window.scrollTo({ top: startY + distance * easeOutQuart(progress), behavior: 'auto' });
+      const liveTargetY = measureTargetY(target);
+      // Re-derive the span from the live target so a reflow adjusts
+      // the remaining travel instead of shifting the whole curve.
+      const eased = easeOutQuart(progress);
+      window.scrollTo({ top: startY + (liveTargetY - startY) * eased, behavior: 'auto' });
 
       if (progress < 1) {
         activeScrollFrame = requestAnimationFrame(step);
       } else {
-        window.scrollTo({ top: targetY, behavior: 'auto' });
+        window.scrollTo({ top: measureTargetY(target), behavior: 'auto' });
         finishProgrammaticScroll();
       }
     };
@@ -304,7 +335,19 @@
     });
   });
 
-  window.addEventListener('touchstart', cancelProgrammaticScroll, { passive: true });
+  // A touch is only a real interruption if it lands after the grace
+  // window -- otherwise it is the tail of the tap that asked for this
+  // scroll in the first place, and cancelling would snap us there.
+  const cancelOnUserTouch = () => {
+    if (!activeScrollFrame) return;
+    if (performance.now() - programmaticScrollStartedAt < TOUCH_GRACE_MS) return;
+    cancelProgrammaticScroll();
+  };
+
+  window.addEventListener('touchstart', cancelOnUserTouch, { passive: true });
+  // touchmove is the unambiguous signal: the user is actually dragging,
+  // so honour it immediately with no grace period.
+  window.addEventListener('touchmove', cancelProgrammaticScroll, { passive: true });
   window.addEventListener('wheel', cancelProgrammaticScroll, { passive: true });
 
   let scrollTicking = false;

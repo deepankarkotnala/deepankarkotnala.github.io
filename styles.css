@@ -177,9 +177,6 @@ html {
   /* script.js overwrites this inline with the incoming theme's
      base colour; --bg is the fallback if it ever does not. */
   background-color: var(--bg);
-  /* Promote to its own layer so the fade never repaints the page. */
-  will-change: opacity;
-  transform: translateZ(0);
 }
 
 /* Fade in to mask, then out to reveal. The two halves are driven from
@@ -188,6 +185,11 @@ html {
 html.theme-transitioning .theme-fade {
   /* Duration is overwritten inline per phase (in, then out). */
   transition: opacity var(--theme-fade-in) linear;
+  /* Promote only for the ~300ms the swap is in flight. Holding a
+     full-viewport composited layer permanently would cost GPU memory
+     on mobile -- the same reason this file releases will-change:auto
+     for .nav-links and .profile-card in the mobile tier below. */
+  will-change: opacity;
 }
 html.theme-transitioning .theme-fade.is-masking {
   opacity: 1;
