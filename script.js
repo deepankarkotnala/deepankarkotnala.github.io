@@ -272,7 +272,7 @@
     const distance = targetY - startY;
 
     if (Math.abs(distance) < 2 || reducedMotion) {
-      window.scrollTo({ top: targetY, behavior: 'auto' });
+      window.scrollTo({ top: targetY, behavior: 'instant' });
       finishProgrammaticScroll();
       return;
     }
@@ -301,12 +301,18 @@
       // Re-derive the span from the live target so a reflow adjusts
       // the remaining travel instead of shifting the whole curve.
       const eased = easeOutQuart(progress);
-      window.scrollTo({ top: startY + (liveTargetY - startY) * eased, behavior: 'auto' });
+      // 'instant', not 'auto': `auto` defers to CSS scroll-behavior,
+      // and html sets `scroll-behavior: smooth` -- so each frame's
+      // scrollTo would kick off its own native smooth animation and
+      // fight this easing. html.js-scroll-controlled also sets
+      // scroll-behavior:auto for the duration, but being explicit here
+      // keeps the loop correct regardless of that class.
+      window.scrollTo({ top: startY + (liveTargetY - startY) * eased, behavior: 'instant' });
 
       if (progress < 1) {
         activeScrollFrame = requestAnimationFrame(step);
       } else {
-        window.scrollTo({ top: measureTargetY(target), behavior: 'auto' });
+        window.scrollTo({ top: measureTargetY(target), behavior: 'instant' });
         finishProgrammaticScroll();
       }
     };
@@ -369,7 +375,30 @@
     }));
   };
 
+  /* `main > section` uses content-visibility:auto with
+     contain-intrinsic-size: auto 900px, so any section that has not
+     been rendered yet contributes a 900px *estimate* to the document
+     height. As sections resolve to their real heights the geometry
+     shifts under us -- measured on this page, section stops drift by
+     up to ~716px and total scrollHeight by ~1022px.
+
+     Geometry was previously only refreshed on resize/load/fonts, so
+     both the active-nav threshold and the scroll-progress denominator
+     stayed at their load-time estimates: the progress bar topped out
+     at ~82% instead of 100%, and 3 of 5 nav links highlighted the
+     wrong section. Re-measure when the document height actually
+     changes, which is cheap because we only pay it on change. */
+  let lastMeasuredHeight = 0;
+  const refreshGeometryIfStale = () => {
+    const height = document.documentElement.scrollHeight;
+    if (height === lastMeasuredHeight) return;
+    lastMeasuredHeight = height;
+    refreshScrollGeometry();
+  };
+
   const updateScrollUI = () => {
+    refreshGeometryIfStale();
+
     const scrollTop = Math.max(0, window.scrollY);
     const nextHeaderScrolled = scrollTop > 16;
 
@@ -426,6 +455,7 @@
     if (geometryFrame) cancelAnimationFrame(geometryFrame);
     geometryFrame = requestAnimationFrame(() => {
       geometryFrame = 0;
+      lastMeasuredHeight = document.documentElement.scrollHeight;
       refreshScrollGeometry();
       updateScrollUI();
     });
@@ -449,6 +479,88 @@
   window.addEventListener('load', scheduleGeometryRefresh, { once: true });
   document.fonts?.ready.then(scheduleGeometryRefresh);
 
+  /* Deep links and history navigation.
+
+     The browser performs its native hash jump before content-
+     visibility has resolved the real heights of the sections above
+     the target, so the landing position is computed against 900px
+     estimates. Measured on this page that put #experience 256px too
+     far down (header overlapping its heading) and #recognition 371px
+     short. scroll-padding-top cannot help -- it applies to the same
+     premature jump.
+
+     Re-anchor once layout has settled. `auto` behaviour, not the
+     animation, because the user asked for a position, not a journey:
+     on a deep link there is nothing to travel from. */
+  const settleHashTarget = (behavior = 'instant') => {
+    const hash = window.location.hash;
+    if (!hash || hash === '#' || hash === '#top') return;
+    let target = null;
+    try { target = document.querySelector(hash); } catch (_) { return; }
+    if (!target) return;
+
+    target.querySelectorAll('.reveal, .skill-card').forEach(item => item.classList.add('visible'));
+    refreshScrollGeometry();
+    // Default behaviour is 'instant' rather than 'auto' for the same
+    // reason: 'auto' would inherit html's `scroll-behavior: smooth`,
+    // and each correction would animate and be interrupted by the
+    // next one -- which is exactly why the deep-link fix appeared to
+    // have no effect until this was found.
+    window.scrollTo({ top: measureTargetY(target), behavior });
+    refreshScrollGeometry();
+    updateScrollUI();
+  };
+
+  if (window.location.hash) {
+    /* content-visibility resolves progressively as sections come into
+       range, and the last one can settle after `load` has fired -- a
+       one-shot correction landed #recognition 207px short. Watch the
+       document height instead and re-anchor until it stops changing,
+       with a hard cap so this can never loop indefinitely. */
+    let settleAttempts = 0;
+    let lastOffset = -1;
+    const settleUntilStable = () => {
+      settleHashTarget();
+      // Compare the resulting position AFTER settling, not the height
+      // before it: scrolling into a region resolves more sections,
+      // which changes the document height again (measured here: 6155
+      // -> 5445 across two frames). Keep going until the landing spot
+      // stops moving, capped so this can never loop indefinitely.
+      const offset = Math.round(window.scrollY);
+      if (offset !== lastOffset && settleAttempts++ < 20) {
+        lastOffset = offset;
+        requestAnimationFrame(settleUntilStable);
+      }
+    };
+    requestAnimationFrame(() => requestAnimationFrame(settleUntilStable));
+    window.addEventListener('load', () => {
+      settleAttempts = 0;
+      lastOffset = -1;
+      settleUntilStable();
+    }, { once: true });
+  }
+
+  // Back/forward between in-page sections changes only the hash, which
+  // fires popstate without moving the page -- previously the browser
+  // was left showing whatever section the user had scrolled to.
+  window.addEventListener('popstate', () => {
+    const hash = window.location.hash;
+    if (!hash || hash === '#top') {
+      cancelProgrammaticScroll();
+      window.scrollTo({ top: 0, behavior: 'instant' });
+      updateScrollUI();
+      return;
+    }
+    cancelProgrammaticScroll();
+    // The browser applies its own scroll restoration on popstate, which
+    // lands against stale content-visibility geometry (measured 88px
+    // off going back). Correct on the next two frames, after that
+    // restoration has been committed.
+    settleHashTarget();
+    requestAnimationFrame(() => requestAnimationFrame(() => settleHashTarget()));
+  });
+
+
   const staggerGroups = [
     '.skills-grid .skill-card',
     '.tools-grid .tool-group-card',
@@ -464,6 +576,150 @@
   document.querySelectorAll('[data-delay]').forEach(element => {
     element.style.setProperty('--delay', `${Math.min(Number(element.dataset.delay) || 0, 190)}ms`);
   });
+
+  /* Contact channel picker.
+
+     One markup source, two presentations (anchored popover on
+     desktop/tablet, bottom sheet under 720px) -- the difference is
+     entirely CSS. This handles state, focus and dismissal.
+
+     [hidden] is removed one frame before .is-open is added: the
+     element must be laid out in its closed state before the browser
+     can interpolate to the open one, otherwise it snaps. */
+  const contactTrigger = document.querySelector('.contact-trigger');
+  const contactSheet = document.querySelector('.contact-sheet');
+
+  if (contactTrigger && contactSheet) {
+    const channels = [...contactSheet.querySelectorAll('.contact-channel')];
+    let contactOpen = false;
+    let contactCloseTimer = null;
+    let contactScrim = null;
+
+    const isSheetMode = () => window.matchMedia('(max-width: 720px)').matches;
+
+    /* In sheet mode the panel is position:fixed, but .contact-card
+       carries .reveal, whose .visible state sets a transform -- and a
+       transformed ancestor becomes the containing block for fixed
+       descendants, which pinned the sheet inside the card instead of
+       to the viewport. Reparent to <body> for sheet mode so no
+       ancestor can capture it, and put it back for the popover, which
+       needs to stay anchored to the trigger. */
+    const sheetHome = contactSheet.parentElement;
+    const placeSheet = () => {
+      const wantBody = isSheetMode();
+      if (wantBody && contactSheet.parentElement !== document.body) {
+        document.body.appendChild(contactSheet);
+      } else if (!wantBody && contactSheet.parentElement !== sheetHome) {
+        sheetHome.appendChild(contactSheet);
+      }
+    };
+
+    const getScrim = () => {
+      if (!contactScrim) {
+        contactScrim = document.createElement('div');
+        contactScrim.className = 'contact-scrim';
+        contactScrim.setAttribute('aria-hidden', 'true');
+        contactScrim.addEventListener('click', () => closeContact({ restoreFocus: true }));
+        document.body.appendChild(contactScrim);
+      }
+      return contactScrim;
+    };
+
+    const openContact = () => {
+      if (contactOpen) return;
+      contactOpen = true;
+      window.clearTimeout(contactCloseTimer);
+
+      placeSheet();
+      contactSheet.hidden = false;
+      if (isSheetMode()) {
+        const scrim = getScrim();
+        scrim.hidden = false;
+        // Same two-step as the sheet: lay out at opacity 0, then animate.
+        requestAnimationFrame(() => scrim.classList.add('is-open'));
+      }
+      contactTrigger.setAttribute('aria-expanded', 'true');
+
+      requestAnimationFrame(() => contactSheet.classList.add('is-open'));
+    };
+
+    const closeContact = ({ restoreFocus = false } = {}) => {
+      if (!contactOpen) return;
+      contactOpen = false;
+
+      contactSheet.classList.remove('is-open');
+      contactScrim?.classList.remove('is-open');
+      contactTrigger.setAttribute('aria-expanded', 'false');
+
+      // Wait out the exit transition before hiding, so it is visible.
+      window.clearTimeout(contactCloseTimer);
+      contactCloseTimer = window.setTimeout(() => {
+        contactSheet.hidden = true;
+        if (contactScrim) contactScrim.hidden = true;
+      }, reducedMotion ? 0 : 280);
+
+      if (restoreFocus) contactTrigger.focus({ preventScroll: true });
+    };
+
+    contactTrigger.addEventListener('click', event => {
+      event.stopPropagation();
+      contactOpen ? closeContact({ restoreFocus: true }) : openContact();
+    });
+
+    // Open with Down/Up from the trigger, landing on the first item --
+    // the standard menu-button keyboard contract.
+    contactTrigger.addEventListener('keydown', event => {
+      if (event.key !== 'ArrowDown' && event.key !== 'ArrowUp') return;
+      event.preventDefault();
+      openContact();
+      requestAnimationFrame(() => {
+        (event.key === 'ArrowDown' ? channels[0] : channels[channels.length - 1])
+          ?.focus({ preventScroll: true });
+      });
+    });
+
+    contactSheet.addEventListener('keydown', event => {
+      const index = channels.indexOf(document.activeElement);
+      if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+        event.preventDefault();
+        const step = event.key === 'ArrowDown' ? 1 : -1;
+        const next = (index + step + channels.length) % channels.length;
+        channels[next]?.focus({ preventScroll: true });
+      } else if (event.key === 'Home' || event.key === 'End') {
+        event.preventDefault();
+        (event.key === 'Home' ? channels[0] : channels[channels.length - 1])
+          ?.focus({ preventScroll: true });
+      } else if (event.key === 'Tab') {
+        // Tabbing out is a dismissal, not a trap: this is a menu, and
+        // the page behind it stays usable.
+        closeContact();
+      }
+    });
+
+    // Following a channel should leave the menu closed behind you.
+    channels.forEach(channel => channel.addEventListener('click', () => closeContact()));
+
+    document.addEventListener('click', event => {
+      if (!contactOpen) return;
+      const target = event.target;
+      if (target instanceof Node &&
+          !contactSheet.contains(target) &&
+          !contactTrigger.contains(target)) {
+        closeContact();
+      }
+    });
+
+    document.addEventListener('keydown', event => {
+      if (event.key === 'Escape' && contactOpen) {
+        event.preventDefault();
+        closeContact({ restoreFocus: true });
+      }
+    });
+
+    // Crossing the sheet/popover breakpoint mid-open would leave the
+    // scrim state mismatched; simplest correct answer is to close.
+    window.addEventListener('resize', () => { if (contactOpen) closeContact(); }, { passive: true });
+  }
 
   // Keep one subtle tilt interaction on the hero card only.
   // Avoid per-card pointer tracking across all glass panels to reduce main-thread work.
