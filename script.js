@@ -18,28 +18,85 @@
   const year = document.getElementById('year');
   if (year) year.textContent = new Date().getFullYear();
 
-  let themeTransitionTimer = null;
-  const applyTheme = (theme, { persist = false, animate = false } = {}) => {
-    const nextTheme = theme === 'dark' ? 'dark' : 'light';
-    const isDark = nextTheme === 'dark';
+  // Keep in sync with --theme-fade-in / --theme-fade-out in styles.css.
+  const THEME_FADE_IN_MS = 120;
+  const THEME_FADE_OUT_MS = 180;
+  const THEME_BG = { dark: '#0b1020', light: '#e9eef5' };
 
-    if (animate && !reducedMotion) {
-      root.classList.add('theme-transitioning');
-      window.clearTimeout(themeTransitionTimer);
-      themeTransitionTimer = window.setTimeout(() => {
-        root.classList.remove('theme-transitioning');
-      }, 700);
+  // Overlay used to mask the theme swap. Created once, lazily, and
+  // only when an animated swap actually happens.
+  let themeFade = null;
+  const getThemeFade = () => {
+    if (!themeFade) {
+      themeFade = document.createElement('div');
+      themeFade.className = 'theme-fade';
+      themeFade.setAttribute('aria-hidden', 'true');
+      document.body.appendChild(themeFade);
     }
+    return themeFade;
+  };
 
+  let themeFadeTimers = [];
+  const clearThemeFadeTimers = () => {
+    themeFadeTimers.forEach(window.clearTimeout);
+    themeFadeTimers = [];
+  };
+
+  const setThemeAttributes = nextTheme => {
+    const isDark = nextTheme === 'dark';
     root.dataset.theme = nextTheme;
     themeButton?.setAttribute('aria-pressed', String(isDark));
     themeButton?.setAttribute('aria-label', isDark ? 'Switch to light mode' : 'Switch to dark mode');
     themeButton?.setAttribute('title', isDark ? 'Switch to light mode' : 'Switch to dark mode');
-    themeColorMeta?.setAttribute('content', isDark ? '#0b1020' : '#e9eef5');
+    themeColorMeta?.setAttribute('content', THEME_BG[nextTheme]);
+  };
+
+  const applyTheme = (theme, { persist = false, animate = false } = {}) => {
+    const nextTheme = theme === 'dark' ? 'dark' : 'light';
 
     if (persist) {
       try { localStorage.setItem('portfolio-theme', nextTheme); } catch (_) {}
     }
+
+    if (!animate || reducedMotion) {
+      setThemeAttributes(nextTheme);
+      return;
+    }
+
+    // Re-entrant clicks: drop any in-flight sequence and start clean
+    // from whatever opacity the overlay currently has.
+    clearThemeFadeTimers();
+
+    const fade = getThemeFade();
+    // Paint the mask in the INCOMING theme's base colour, so the fade
+    // reads as the page becoming the new theme rather than as a flash
+    // of the old one.
+    fade.style.backgroundColor = THEME_BG[nextTheme];
+
+    root.classList.add('theme-transitioning');
+    // Flush so the transition rules and starting opacity are committed
+    // before .is-masking is added -- otherwise the browser may collapse
+    // both into one style resolution and skip the fade entirely.
+    void fade.offsetWidth;
+
+    fade.style.transitionDuration = `${THEME_FADE_IN_MS}ms`;
+    fade.classList.add('is-masking');
+
+    // At full mask, swap the theme unseen, then reveal.
+    themeFadeTimers.push(window.setTimeout(() => {
+      setThemeAttributes(nextTheme);
+      fade.style.transitionDuration = `${THEME_FADE_OUT_MS}ms`;
+      // Let the swapped colours paint under the mask for one frame
+      // before starting the reveal.
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => fade.classList.remove('is-masking'));
+      });
+    }, THEME_FADE_IN_MS));
+
+    themeFadeTimers.push(window.setTimeout(() => {
+      root.classList.remove('theme-transitioning');
+      fade.style.transitionDuration = '';
+    }, THEME_FADE_IN_MS + THEME_FADE_OUT_MS + 50));
   };
 
   applyTheme(root.dataset.theme || 'light');

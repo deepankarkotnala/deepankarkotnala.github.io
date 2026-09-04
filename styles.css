@@ -1,4 +1,10 @@
 :root {
+  /* Theme crossfade timing: shared by both themes, so it must live
+     in the base :root and not in a [data-theme] block. Asymmetric on
+     purpose -- masking fast feels responsive to the click, revealing
+     slightly slower lets the new theme settle rather than snap. */
+  --theme-fade-in: 120ms;
+  --theme-fade-out: 180ms;
   --radius-xl: 26px;
   --radius-lg: 20px;
   --radius-md: 15px;
@@ -129,47 +135,100 @@ html {
   scroll-behavior: smooth;
   scroll-padding-top: 78px;
 }
-/* Smooth global theme transitions when switching modes */
-html.theme-transitioning,
-html.theme-transitioning body {
-  transition:
-    background-color 550ms cubic-bezier(0.16, 1, 0.3, 1),
-    color 550ms cubic-bezier(0.16, 1, 0.3, 1) !important;
+/* ============================================================
+   Theme transition
+   ============================================================
+   Approach: one compositor-driven crossfade, not 39 interpolations.
+
+   Interpolating the themed custom properties individually cannot look
+   uniform, because they are consumed by properties with different
+   animation behaviour:
+
+     - `background: linear-gradient(...)` sets background-IMAGE, which
+       is not interpolable between two colour stops. `.hero::after`,
+       `.profile-image` and `.section-tinted` therefore snapped
+       instantly while flat-background neighbours faded.
+     - `box-shadow` is interpolable but expensive (uncomposited blur
+       raster, cost ~ radius squared), so it was excluded -- meaning
+       large surfaces flipped their shadow while still light.
+     - `::before` / `::after` sheens and glows are not matched by a
+       class selector at all, so they snapped too.
+     - `filter` and `opacity` on .hero-backdrop are yet another pair
+       of curves.
+
+   Chasing each of those separately means more main-thread paint for a
+   result that still cannot land together. Instead: paint a fixed
+   overlay in the INCOMING theme's base colour, fade it in, swap
+   `data-theme` at the peak while it masks the page, then fade it out.
+
+   Every element therefore changes at exactly the same moment, behind
+   the same mask. Gradients, shadows, pseudo-elements and filters all
+   included, with no per-property exceptions. `opacity` on a single
+   fixed element is composited, so the fade itself costs no layout and
+   no repaint -- which is what lets this be both faster and smoother
+   than the per-property version it replaces. */
+
+.theme-fade {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  pointer-events: none;
+  opacity: 0;
+  /* script.js overwrites this inline with the incoming theme's
+     base colour; --bg is the fallback if it ever does not. */
+  background-color: var(--bg);
+  /* Promote to its own layer so the fade never repaints the page. */
+  will-change: opacity;
+  transform: translateZ(0);
 }
 
-html.theme-transitioning .glass,
-html.theme-transitioning .profile-card,
-html.theme-transitioning .nav,
-html.theme-transitioning .nav-links,
-html.theme-transitioning .panel,
-html.theme-transitioning .education-card,
-html.theme-transitioning .recognition-card,
-html.theme-transitioning .tool-group-card,
-html.theme-transitioning .skill-card,
-html.theme-transitioning .theme-toggle,
-html.theme-transitioning .menu-toggle,
-html.theme-transitioning .button,
-html.theme-transitioning .date-pill,
-html.theme-transitioning .availability,
-html.theme-transitioning .profile-tags span,
-html.theme-transitioning .profile-location,
-html.theme-transitioning .profile-footer,
-html.theme-transitioning .profile-image {
-  transition:
-    background-color 550ms cubic-bezier(0.16, 1, 0.3, 1),
-    border-color 550ms cubic-bezier(0.16, 1, 0.3, 1),
-    color 550ms cubic-bezier(0.16, 1, 0.3, 1),
-    box-shadow 550ms cubic-bezier(0.16, 1, 0.3, 1) !important;
+/* Fade in to mask, then out to reveal. The two halves are driven from
+   script.js by toggling .is-masking, so the midpoint is a real commit
+   point where data-theme can be swapped unseen. */
+html.theme-transitioning .theme-fade {
+  /* Duration is overwritten inline per phase (in, then out). */
+  transition: opacity var(--theme-fade-in) linear;
+}
+html.theme-transitioning .theme-fade.is-masking {
+  opacity: 1;
 }
 
-html.theme-transitioning h1,
-html.theme-transitioning h2,
-html.theme-transitioning h3,
-html.theme-transitioning h4,
-html.theme-transitioning p,
-html.theme-transitioning span,
-html.theme-transitioning a {
-  transition: color 550ms cubic-bezier(0.16, 1, 0.3, 1) !important;
+/* With the crossfade doing the work, the page itself needs no colour
+   transitions at all -- the swap happens while masked. Suppressing
+   them is what removes the staggered "different elements brighten
+   differently" effect, and it also removes all of that paint cost. */
+html.theme-transitioning *:not(.theme-fade),
+html.theme-transitioning *::before,
+html.theme-transitioning *::after {
+  transition-property: none !important;
+}
+
+/* Hold decorative motion still through the swap: a paused frame under
+   the mask reads as intentional, whereas an orbit that has visibly
+   jumped position across the fade does not. */
+html.theme-transitioning :is(
+  .orbit, .svg-dash, .svg-pulse, .svg-orbit, .svg-scan, .svg-bob,
+  .svg-star, .svg-traveller, .data-packet, .workflow-packet,
+  .inference-packet, .packet-a, .packet-b, .neural-links path,
+  .neural-nodes circle, .attention-nodes circle, .agent-node circle,
+  .chip-lines, .scan-line, .workflow-path, .inference-path,
+  .learning-loop, .agent-core, .brain-path, .badge-ring,
+  .check-path, .verification-orbit, .noise
+) {
+  animation-play-state: paused !important;
+}
+
+/* `content-visibility: auto` would otherwise resolve skipped sections
+   mid-transition, swapping contain-intrinsic-size for a real height
+   and shifting scroll geometry. Hold them resolved. */
+html.theme-transitioning main > section {
+  content-visibility: visible;
+  contain-intrinsic-size: auto none;
+}
+
+/* Reduced motion: no fade, no mask -- just an instant swap. */
+@media (prefers-reduced-motion: reduce) {
+  .theme-fade { display: none; }
 }
 
 body {
@@ -190,7 +249,9 @@ body {
   overflow-x: clip;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
-  transition: color 650ms cubic-bezier(0.16, 1, 0.3, 1), background-color 650ms cubic-bezier(0.16, 1, 0.3, 1);
+  /* No unconditional transition here: it duplicated (and fought) the
+     shorter one applied via html.theme-transitioning, and it made the
+     very first paint after a stored-theme restore animate too. */
 }
 
 
