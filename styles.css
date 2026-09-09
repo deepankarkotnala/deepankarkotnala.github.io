@@ -9,53 +9,27 @@
   --radius-lg: 20px;
   --radius-md: 15px;
   --radius-sm: 11px;
-  --shell: min(1160px, calc(100% - 42px));
+  --shell: min(1240px, calc(100% - 48px));
   --ease: cubic-bezier(.22, 1, .36, 1);
   --ease-soft: cubic-bezier(.2, .8, .2, 1);
   --duration-fast: 180ms;
   --duration-ui: 260ms;
   --duration-reveal: 440ms;
 
-  /* Fluid type scale.
-     Every step interpolates on viewport width and is floored at a legible
-     minimum, so sizes scale smoothly instead of snapping at breakpoints.
-
-     Mobile floors were raised: the previous scale bottomed out at 12px
-     for --text-xs, which carries real reading copy (experience bullets,
-     education and recognition body text), and 15px for --text-base.
-     Measured at 360-412px that rendered body copy at 12.1-13.2px, well
-     under the ~16px that iOS HIG and Material both treat as the
-     baseline for sustained reading -- and it put card h3 headings
-     *below* default body size.
-
-     Upper bounds are pinned to the ORIGINAL desktop values, so wide
-     screens render exactly as before -- verified identical at 960 to
-     1440px. Several ramps therefore run *downward* (a larger floor
-     than ceiling), which clamp() handles correctly: the floor wins on
-     narrow screens, the ceiling on wide ones. Only the small end of
-     each ramp moved.
-
-     --text-2xs stays at an 11px floor: it is used only for
-     non-essential micro-text, never for reading copy. */
-  --text-2xs: clamp(0.6875rem, 0.66rem + 0.14vw, 0.75rem);   /* 11 -> 12px */
-  /* Coefficients solved so each ramp is exactly its mobile floor at
-     360px and exactly its original desktop value from 960px up. */
-  --text-xs:  clamp(0.8125rem, 0.9125rem - 0.1667vw, 0.875rem); /* 14 @360 -> 13 @960 */
-  --text-sm:  clamp(0.875rem, 0.975rem - 0.1667vw, 0.9375rem);  /* 15 @360 -> 14 @960 */
-  --text-base: 1rem;                                            /* 16px, flat */
-  --text-md:  1.0625rem;                                        /* 17px, flat */
-  --text-lg:  clamp(1.125rem, 1.0875rem + 0.1667vw, 1.1875rem); /* 18 @360 -> 19 @960 */
-  --text-xl:  clamp(1.25rem, 1.175rem + 0.3333vw, 1.375rem);    /* 20 @360 -> 22 @960 */
-  --text-2xl: clamp(1.4375rem, 1.3rem + 0.7vw, 1.75rem);     /* 23 -> 28px */
-  --text-3xl: clamp(1.75rem, 1.4rem + 1.9vw, 2.5rem);        /* 28 -> 40px */
-  --text-4xl: clamp(2.25rem, 1.5rem + 4.2vw, 4.25rem);       /* 36 -> 68px */
-
-  /* Uppercase micro-labels: tracking makes them read smaller than their
-     nominal size, so they get their own floor. These are short labels
-     ("CERTIFICATION", "CURRENT ROLE"), not reading copy, so they need
-     less headroom than body text -- but 11px was too tight once the
-     surrounding copy grew, so the floor moves to 12px. */
-  --text-label: clamp(0.75rem, 0.72rem + 0.16vw, 0.8125rem);
+  /* Apple HIG & Modern Web Fluid Typography Scale.
+     Calibrated against Apple's standard web typography (17px body baseline, 
+     15px secondary text, 13px captions/labels) with smooth responsive scaling. */
+  --text-2xs: clamp(0.75rem, 0.72rem + 0.14vw, 0.8125rem);    /* 12 -> 13px */
+  --text-label: clamp(0.75rem, 0.72rem + 0.16vw, 0.8125rem);  /* 12 -> 13px uppercase labels */
+  --text-xs:  clamp(0.875rem, 0.84rem + 0.2vw, 0.9375rem);    /* 14 -> 15px (Apple secondary/reading copy) */
+  --text-sm:  clamp(0.9375rem, 0.9rem + 0.25vw, 1rem);        /* 15 -> 16px */
+  --text-base: clamp(1rem, 0.95rem + 0.3vw, 1.0625rem);       /* 16 -> 17px (Apple standard body baseline) */
+  --text-md:  clamp(1.0625rem, 1.02rem + 0.3vw, 1.125rem);    /* 17 -> 18px */
+  --text-lg:  clamp(1.1875rem, 1.12rem + 0.35vw, 1.3125rem);  /* 19 -> 21px */
+  --text-xl:  clamp(1.3125rem, 1.22rem + 0.5vw, 1.5rem);      /* 21 -> 24px */
+  --text-2xl: clamp(1.5rem, 1.35rem + 0.8vw, 1.875rem);     /* 24 -> 30px */
+  --text-3xl: clamp(1.875rem, 1.5rem + 2.0vw, 2.625rem);     /* 30 -> 42px */
+  --text-4xl: clamp(2.5rem, 1.8rem + 4.5vw, 4.5rem);         /* 40 -> 72px */
 }
 
 :root,
@@ -274,6 +248,26 @@ html.theme-transitioning main > section {
   .theme-fade { display: none; }
 }
 
+html {
+  scrollbar-gutter: stable;
+}
+
+/* Sleek modern scrollbar for Edge / Chrome so it matches Safari's minimal profile */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--muted) 30%, transparent);
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in srgb, var(--muted) 50%, transparent);
+}
+
 body {
   margin: 0;
   width: 100%;
@@ -286,15 +280,14 @@ body {
     radial-gradient(circle at 90% 22%, color-mix(in srgb, var(--accent-2) 13%, transparent), transparent 30rem),
     radial-gradient(circle at 68% 78%, color-mix(in srgb, var(--accent-3) 10%, transparent), transparent 30rem);
   background-attachment: scroll;
-  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   font-size: var(--text-base);
-  line-height: 1.58;
+  line-height: 1.62;
   overflow-x: clip;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
-  /* No unconditional transition here: it duplicated (and fought) the
-     shorter one applied via html.theme-transitioning, and it made the
-     very first paint after a stored-theme restore animate too. */
+  font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
 }
 
 
@@ -615,11 +608,31 @@ svg { fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: roun
 .hero-stats div { display: flex; flex-direction: column; }
 .hero-stats strong { color: var(--heading); font-size: 1.18rem; line-height: 1; font-weight: 650; letter-spacing: -.035em; }
 .hero-stats span { margin-top: 5px; color: var(--muted-2); font-size: var(--text-label); font-weight: 650; text-transform: uppercase; letter-spacing: .08em; }
-.hero-visual { position: relative; display: grid; place-items: center; min-height: 420px; perspective: 1100px; }
-.hero-network { position: absolute; width: 430px; max-width: 118%; color: color-mix(in srgb, var(--accent) 35%, transparent); opacity: .62; filter: drop-shadow(0 8px 18px rgba(88,97,182,.08)); }
+.hero-visual {
+  position: relative;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  min-height: 440px;
+  perspective: 1100px;
+}
+.hero-network {
+  position: absolute;
+  width: 440px;
+  max-width: none;
+  right: calc(min(100%, 400px) / 2 - 220px);
+  top: 50%;
+  transform: translateY(-50%);
+  color: color-mix(in srgb, var(--accent) 35%, transparent);
+  opacity: .62;
+  filter: drop-shadow(0 8px 18px rgba(88,97,182,.08));
+  pointer-events: none;
+}
 .profile-card {
-  width: min(100%, 356px);
-  padding: 22px 20px 18px;
+  width: min(100%, 400px);
+  margin-left: auto;
+  margin-right: 0;
+  padding: 24px 22px 20px;
   border-radius: var(--radius-xl);
   transform-style: preserve-3d;
   will-change: transform;
@@ -795,10 +808,7 @@ svg { fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: roun
 .profile-card:is(:hover, :focus-within) .profile-footer {
   transform: translateZ(12px) translateY(-1px);
 }
-.orbit { position: absolute; border: 1px solid color-mix(in srgb, var(--accent) 18%, transparent); border-radius: 50%; animation: spin 24s linear infinite; }
-.orbit::before { content: ""; position: absolute; width: 8px; height: 8px; border-radius: 50%; background: var(--accent-2); top: 18%; left: 4%; box-shadow: 0 0 16px color-mix(in srgb, var(--accent-2) 60%, transparent); }
-.orbit-one { width: 370px; height: 370px; }
-.orbit-two { width: 422px; height: 422px; animation-duration: 34s; animation-direction: reverse; }
+.orbit { display: none !important; }
 .scroll-cue { position: absolute; left: 50%; bottom: 18px; display: inline-flex; align-items: center; gap: 8px; color: var(--muted-2); font-size: var(--text-label); font-weight: 650; text-transform: uppercase; letter-spacing: .1em; transform: translateX(-50%); }
 .scroll-cue span { width: 17px; height: 27px; border: 1px solid var(--line); border-radius: 999px; position: relative; }
 .scroll-cue span::before { content: ""; position: absolute; left: 50%; top: 5px; width: 3px; height: 6px; border-radius: 999px; background: var(--accent); transform: translateX(-50%); animation: scrollCue 1.9s ease-in-out infinite; }
@@ -1523,11 +1533,11 @@ svg { fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: roun
   .hero { min-height: auto; padding: 92px 0 48px; }
   .hero-grid { grid-template-columns: minmax(0,1fr) 300px; gap: 26px; }
   .hero h1 { font-size: clamp(3rem, 8vw, 4.3rem); }
-  .hero-visual { min-height: 370px; }
-  .profile-card { width: 286px; padding: 20px 18px 17px; }
-  .profile-avatar-wrap { width: 158px; height: 158px; }
-  .orbit-one { width: 320px; height: 320px; }
-  .orbit-two { width: 362px; height: 362px; }
+  .hero-visual { min-height: 370px; justify-content: center; }
+  .profile-card { width: 286px; padding: 20px 18px 17px; margin-inline: auto; }
+  .hero-network { right: auto; left: 50%; transform: translate(-50%, -50%); }
+  .orbit-one { width: 320px; height: 320px; right: auto; left: 50%; top: 50%; transform: translate(-50%, -50%); }
+  .orbit-two { width: 362px; height: 362px; right: auto; left: 50%; top: 50%; transform: translate(-50%, -50%); }
   .section-heading { grid-template-columns: minmax(0,1fr) 140px; }
   .section-art { width: 136px; }
   .project ul { grid-template-columns: 1fr; }
