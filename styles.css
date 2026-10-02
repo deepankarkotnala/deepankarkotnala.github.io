@@ -46,15 +46,12 @@
   --muted: #68768b;
   --muted-2: #8793a5;
   --emphasis: #31405a;
-  /* Darkened from #6f72e8. That value only reached 3.56:1 against the
-     page background -- under the 4.5:1 WCAG AA threshold -- and it is
-     used as text in ~14 places (hero role, kicker/eyebrow, links,
-     institution names, section numbers). This is the same indigo,
-     just deeper, and lifts body-size accent text to ~5.0:1.
-     The dark theme is deliberately left alone. */
-  --accent: #5457d6;
-  --accent-2: #1f8fa4;
-  --accent-3: #7f57c4;
+  /* Royal Suit Blue sampled directly from the profile portrait blazer.
+     Lifts body-size accent text and links to 5.30:1 contrast against
+     --bg (#e9eef5) to exceed the WCAG AA 4.5:1 threshold. */
+  --accent: #1a56db;
+  --accent-2: #0284c7;
+  --accent-3: #1e40af;
   --success: #249269;
   /* Solid-fill green for the WhatsApp CTA. Kept separate from
      --success because that token is also used as TEXT on dark
@@ -104,9 +101,9 @@
   --muted: #9ba9bd;
   --muted-2: #78879d;
   --emphasis: #d9e2f1;
-  --accent: #9398ff;
-  --accent-2: #4fc6dd;
-  --accent-3: #b18bff;
+  --accent: #70a6ff;
+  --accent-2: #38bdf8;
+  --accent-3: #93c5fd;
   --success: #55c897;
   /* Deliberately much darker than --success: as a solid fill the mint
      read as a glowing highlighter, and white-on-#55c897 was only a
@@ -409,7 +406,7 @@ svg { fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: roun
   font-size: var(--text-xs);
   font-weight: 750;
   letter-spacing: .02em;
-  background: linear-gradient(145deg, #6978d4, #8b70cf);
+  background: linear-gradient(145deg, #1d4ed8, #1e3a8a);
   box-shadow: none;
 }
 .brand-name {
@@ -437,10 +434,10 @@ svg { fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: roun
   margin-left: 4px;
   padding-inline: 13px;
   color: rgba(255,255,255,.96);
-  background: linear-gradient(135deg, #6574cb, #7d69bd);
-  box-shadow: 0 8px 20px rgba(89,102,185,.2), inset 0 1px 0 rgba(255,255,255,.22);
+  background: linear-gradient(135deg, #1d4ed8, #1e40af);
+  box-shadow: 0 8px 20px rgba(29,78,216,.22), inset 0 1px 0 rgba(255,255,255,.22);
 }
-.nav-links .nav-cta:hover { color: #fff; background: linear-gradient(135deg, #7180d7, #886fc7); }
+.nav-links .nav-cta:hover { color: #fff; background: linear-gradient(135deg, #2563eb, #1d4ed8); }
 .nav-controls { display: flex; align-items: center; gap: 6px; flex: 0 0 auto; margin-left: auto; }
 .theme-toggle,
 .menu-toggle {
@@ -600,8 +597,8 @@ svg { fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: roun
 .button svg { width: 17px; }
 .button:hover { transform: translateY(-2px); }
 .button:active { transform: translateY(0) scale(.98); }
-.button-primary { color: rgba(255,255,255,.96); background: linear-gradient(135deg, #6574cb, #7c68ba); box-shadow: 0 10px 24px rgba(89,102,185,.22), inset 0 1px 0 rgba(255,255,255,.24); }
-.button-primary:hover { color: #fff; box-shadow: 0 14px 30px rgba(89,102,185,.28), inset 0 1px 0 rgba(255,255,255,.26); }
+.button-primary { color: rgba(255,255,255,.96); background: linear-gradient(135deg, #1d4ed8, #1e40af); box-shadow: 0 10px 24px rgba(29,78,216,.24), inset 0 1px 0 rgba(255,255,255,.24); }
+.button-primary:hover { color: #fff; box-shadow: 0 14px 30px rgba(29,78,216,.32), inset 0 1px 0 rgba(255,255,255,.26); }
 .button-ghost { color: var(--heading); background: color-mix(in srgb, var(--surface-strong) 75%, transparent); border: 1px solid var(--glass-edge); box-shadow: inset 0 1px 0 var(--glass-highlight); backdrop-filter: blur(14px); }
 .button-ghost:hover { border-color: color-mix(in srgb, var(--accent) 27%, var(--line)); background: color-mix(in srgb, var(--accent) 7%, var(--surface-strong)); }
 .hero-stats { display: flex; flex-wrap: wrap; gap: 26px; margin-top: 26px; }
@@ -625,7 +622,7 @@ svg { fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: roun
   transform: translateY(-50%);
   color: color-mix(in srgb, var(--accent) 35%, transparent);
   opacity: .62;
-  filter: drop-shadow(0 8px 18px rgba(88,97,182,.08));
+  filter: drop-shadow(0 8px 18px rgba(26,86,219,.09));
   pointer-events: none;
 }
 .profile-card {
@@ -822,7 +819,7 @@ svg { fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: roun
 .heading-copy { max-width: 760px; }
 .section-heading h2, .contact-card h2 { margin: 7px 0 0; color: var(--heading); font-size: clamp(1.9rem, 3.5vw, 2.85rem); line-height: 1.16; letter-spacing: -.03em; font-weight: 635; }
 .section-heading .heading-copy > p:last-child:not(.kicker) { max-width: 650px; margin: 10px 0 0; color: var(--muted); font-size: var(--text-sm); }
-.section-art { width: 160px; height: 105px; justify-self: end; display: grid; place-items: center; color: color-mix(in srgb, var(--accent) 70%, var(--accent-2)); opacity: .82; filter: drop-shadow(0 12px 22px rgba(77,89,169,.12)); }
+.section-art { width: 160px; height: 105px; justify-self: end; display: grid; place-items: center; color: color-mix(in srgb, var(--accent) 70%, var(--accent-2)); opacity: .82; filter: drop-shadow(0 12px 22px rgba(26,86,219,.12)); }
 .section-art svg { width: 100%; height: 100%; overflow: visible; }
 .section-art circle, .section-art polygon, .section-art path { vector-effect: non-scaling-stroke; }
 
