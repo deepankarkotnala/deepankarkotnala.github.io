@@ -429,6 +429,32 @@ svg { fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: roun
 }
 .nav-links a:hover, .nav-links a.active { color: var(--heading); background: color-mix(in srgb, var(--accent) 10%, transparent); }
 .nav-links a:active { transform: scale(.97); }
+/* Sliding active pill. script.js sizes and positions it over the active
+   link; once it is live, the link's own active background is dropped so
+   the highlight travels between items instead of blinking. */
+.nav-links { position: relative; }
+.nav-links a { position: relative; z-index: 1; }
+.nav-indicator {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  border-radius: 999px;
+  /* Same blue family as the DK mark and LinkedIn CTA: a deep indigo
+     wash drifting toward the sky accent, with a hairline edge. */
+  background: linear-gradient(135deg,
+    color-mix(in srgb, var(--accent-3) 22%, transparent),
+    color-mix(in srgb, var(--accent-2) 16%, transparent));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 24%, transparent),
+    0 4px 12px color-mix(in srgb, var(--accent-3) 14%, transparent);
+  opacity: 0;
+  pointer-events: none;
+  will-change: transform, width;
+  transition: transform 420ms var(--ease), width 420ms var(--ease), height 420ms var(--ease), opacity var(--duration-fast) var(--ease);
+}
+.nav-indicator.is-visible { opacity: 1; }
+.nav-links.has-indicator a.active { color: var(--accent-3); background: transparent; }
+@media (prefers-reduced-motion: reduce) { .nav-indicator { transition: none; } }
 .nav-links .nav-social { color: var(--text); }
 .nav-links .nav-cta {
   margin-left: 4px;
@@ -1526,6 +1552,7 @@ svg { fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: roun
     border-color: color-mix(in srgb, var(--accent) 18%, var(--line));
   }
   .nav-links .nav-cta { margin: 0; text-align: center; }
+  .nav-indicator { display: none; }
   .menu-toggle { position: relative; z-index: 105; display: inline-flex; }
   .hero { min-height: auto; padding: 92px 0 48px; }
   .hero-grid { grid-template-columns: minmax(0,1fr) 300px; gap: 26px; }

@@ -227,6 +227,47 @@
   const currentHashTarget = window.location.hash ? document.querySelector(window.location.hash) : null;
   currentHashTarget?.querySelectorAll('.reveal, .skill-card').forEach(item => item.classList.add('visible'));
 
+  // Sliding highlight behind the active desktop nav link. The mobile
+  // menu is a grid sheet, so there each link keeps its own background.
+  const navIndicator = document.createElement('span');
+  navIndicator.className = 'nav-indicator';
+  navIndicator.setAttribute('aria-hidden', 'true');
+  menu?.prepend(navIndicator);
+
+  const moveNavIndicator = ({ animate = true } = {}) => {
+    if (!menu) return;
+    const active = navAnchors.find(anchor => anchor.classList.contains('active'));
+    const enabled = Boolean(active) && window.innerWidth > 900;
+    menu.classList.toggle('has-indicator', enabled);
+    if (!enabled) {
+      navIndicator.classList.remove('is-visible');
+      return;
+    }
+
+    // Appearing from hidden (first paint, resize, returning from the
+    // mobile layout) should land in place, not slide in from 0,0.
+    const snap = !animate || !navIndicator.classList.contains('is-visible');
+    if (snap) navIndicator.style.transition = 'none';
+    navIndicator.style.width = `${active.offsetWidth}px`;
+    navIndicator.style.height = `${active.offsetHeight}px`;
+    navIndicator.style.transform = `translate3d(${active.offsetLeft}px, ${active.offsetTop}px, 0)`;
+    if (snap) {
+      void navIndicator.offsetWidth;
+      navIndicator.style.transition = '';
+    }
+    navIndicator.classList.add('is-visible');
+  };
+
+  const setActiveNav = id => {
+    navAnchors.forEach(anchor => anchor.classList.toggle('active', anchor.getAttribute('href') === `#${id}`));
+    moveNavIndicator();
+  };
+
+  // While a nav click is scrolling the page, hold the highlight on the
+  // destination so it glides there once instead of stepping through
+  // every section passed on the way.
+  let navLockId = '';
+
   let activeScrollFrame = 0;
   // Timestamp of the most recent programmatic scroll start. Touch
   // events arriving within the grace window below are treated as
@@ -247,6 +288,11 @@
     header?.classList.remove('header-hidden');
     headerHidden = false;
     lastScrollY = window.scrollY;
+    if (navLockId) {
+      navLockId = '';
+      // Force the next scroll update to re-evaluate from real position.
+      activeSection = '';
+    }
   };
 
   const cancelProgrammaticScroll = () => {
@@ -336,6 +382,12 @@
 
       requestAnimationFrame(() => {
         scrollToTarget(target);
+        const id = hash.slice(1);
+        if (activeScrollFrame && navAnchors.some(link => link.getAttribute('href') === hash)) {
+          navLockId = id;
+          activeSection = id;
+          setActiveNav(id);
+        }
         requestAnimationFrame(() => body.classList.remove('nav-jump'));
       });
     });
@@ -443,9 +495,9 @@
       current = section.id;
     }
 
-    if (current !== activeSection) {
+    if (!navLockId && current !== activeSection) {
       activeSection = current;
-      navAnchors.forEach(anchor => anchor.classList.toggle('active', anchor.getAttribute('href') === `#${current}`));
+      setActiveNav(current);
     }
 
     scrollTicking = false;
@@ -458,6 +510,7 @@
       lastMeasuredHeight = document.documentElement.scrollHeight;
       refreshScrollGeometry();
       updateScrollUI();
+      moveNavIndicator({ animate: false });
     });
   };
 
