@@ -133,7 +133,7 @@
     menuButton.setAttribute('aria-label', 'Open navigation');
     menu.setAttribute('aria-hidden', window.innerWidth <= 900 ? 'true' : 'false');
     menu.inert = window.innerWidth <= 900;
-    if (restoreFocus && lastFocusedBeforeMenu instanceof HTMLElement) lastFocusedBeforeMenu.focus();
+    if (restoreFocus && lastFocusedBeforeMenu instanceof HTMLElement) lastFocusedBeforeMenu.focus({ preventScroll: true });
   };
 
   const openMenu = () => {

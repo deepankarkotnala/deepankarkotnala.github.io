@@ -382,7 +382,7 @@ svg { fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: roun
      Windows Chromium. */
   background: var(--nav-bg);
   box-shadow: var(--nav-shadow);
-  transition: box-shadow var(--duration-ui) var(--ease), background var(--duration-ui) var(--ease), transform 220ms var(--ease);
+  transition: border-color var(--duration-ui) var(--ease), box-shadow var(--duration-ui) var(--ease), background var(--duration-ui) var(--ease), transform 220ms var(--ease);
 }
 .site-header.scrolled { top: 6px; }
 .site-header.scrolled .nav { box-shadow: var(--nav-shadow-scrolled); }
@@ -1454,25 +1454,25 @@ svg { fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: roun
     margin-inline: 0;
     overflow: visible;
   }
-  .brand { max-width: calc(100% - 48px); }
-  .nav-controls { margin-left: auto; }
+  .brand {
+    position: relative;
+    z-index: 105;
+    max-width: calc(100% - 48px);
+  }
+  .nav-controls {
+    position: relative;
+    z-index: 105;
+    margin-left: auto;
+  }
   .menu-toggle { display: inline-flex; }
-  .nav-backdrop { display: block; }
+  .nav-backdrop {
+    display: block;
+    top: 56px;
+  }
   body.menu-open { overflow: hidden; touch-action: none; }
   body.menu-open .nav-backdrop {
     opacity: 1;
     pointer-events: auto;
-    top: 56px;
-  }
-  body.menu-open .nav {
-    background: color-mix(in srgb, var(--surface-solid) 98%, var(--bg));
-    border-color: color-mix(in srgb, var(--line) 85%, transparent);
-    box-shadow: 0 4px 18px rgba(0, 0, 0, .14);
-  }
-  :root[data-theme="light"] body.menu-open .nav {
-    background: #ffffff;
-    border-color: color-mix(in srgb, var(--line) 55%, transparent);
-    box-shadow: 0 4px 18px rgba(15, 23, 42, .07);
   }
   .nav-links {
     position: fixed;
@@ -1501,7 +1501,7 @@ svg { fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: roun
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
-    transform: translate3d(0,-12px,0) scale(.985);
+    transform: translate3d(0,-4px,0) scale(.985);
     transform-origin: top center;
     will-change: transform, opacity;
     transition: opacity 200ms var(--ease), transform 240ms var(--ease), visibility 0s linear 240ms;
