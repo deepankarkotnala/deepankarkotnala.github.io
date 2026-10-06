@@ -409,7 +409,6 @@
   window.addEventListener('wheel', cancelProgrammaticScroll, { passive: true });
 
   let scrollTicking = false;
-  let scrollStopTimer = 0;
   let geometryFrame = 0;
   let maxScroll = 1;
   let sectionStops = [];
@@ -439,18 +438,12 @@
      stayed at their load-time estimates: the progress bar topped out
      at ~82% instead of 100%, and 3 of 5 nav links highlighted the
      wrong section. Re-measure when the document height actually
-     changes, which is cheap because we only pay it on change. */
-  let lastMeasuredHeight = 0;
-  const refreshGeometryIfStale = () => {
-    const height = document.documentElement.scrollHeight;
-    if (height === lastMeasuredHeight) return;
-    lastMeasuredHeight = height;
-    refreshScrollGeometry();
-  };
+     changes. A ResizeObserver on <body> reports that after layout has
+     already run, so unlike reading scrollHeight inside the scroll
+     handler (which forced a synchronous style + layout on every
+     scroll frame) it costs nothing while the user is scrolling. */
 
   const updateScrollUI = () => {
-    refreshGeometryIfStale();
-
     const scrollTop = Math.max(0, window.scrollY);
     const nextHeaderScrolled = scrollTop > 16;
 
@@ -507,18 +500,17 @@
     if (geometryFrame) cancelAnimationFrame(geometryFrame);
     geometryFrame = requestAnimationFrame(() => {
       geometryFrame = 0;
-      lastMeasuredHeight = document.documentElement.scrollHeight;
       refreshScrollGeometry();
       updateScrollUI();
       moveNavIndicator({ animate: false });
     });
   };
 
+  /* No body-level "is-scrolling" class here: toggling a class on <body>
+     at the start and end of every scroll invalidated style for the
+     whole document and repainted every element whose filters it
+     switched, which showed up as dropped frames on Windows. */
   const onScroll = () => {
-    if (!body.classList.contains('is-scrolling')) body.classList.add('is-scrolling');
-    window.clearTimeout(scrollStopTimer);
-    scrollStopTimer = window.setTimeout(() => body.classList.remove('is-scrolling'), 130);
-
     if (!scrollTicking) {
       requestAnimationFrame(updateScrollUI);
       scrollTicking = true;
@@ -531,6 +523,9 @@
   window.addEventListener('resize', scheduleGeometryRefresh, { passive: true });
   window.addEventListener('load', scheduleGeometryRefresh, { once: true });
   document.fonts?.ready.then(scheduleGeometryRefresh);
+  if ('ResizeObserver' in window) {
+    new ResizeObserver(scheduleGeometryRefresh).observe(body);
+  }
 
   /* Deep links and history navigation.
 

@@ -2028,11 +2028,6 @@ section[id] { scroll-margin-top: 86px; }
   }
 }
 
-body.is-scrolling .ambient,
-body.is-scrolling .orbit,
-body.is-scrolling .hero-network *,
-body.is-scrolling .section-art *,
-body.is-scrolling .status-dot,
 body.is-programmatic-scrolling .ambient,
 body.is-programmatic-scrolling .orbit,
 body.is-programmatic-scrolling .hero-network *,
@@ -2313,14 +2308,14 @@ body.is-programmatic-scrolling .status-dot {
   animation-play-state: running;
 }
 
-/* Temporarily flatten costly live blurs while pixels are moving. */
-body:is(.is-scrolling, .is-programmatic-scrolling) .noise {
+/* Temporarily flatten costly live blurs during nav-link jumps. */
+body.is-programmatic-scrolling .noise {
   opacity: 0;
 }
-body:is(.is-scrolling, .is-programmatic-scrolling) .glass,
-body:is(.is-scrolling, .is-programmatic-scrolling) .nav,
-body:is(.is-scrolling, .is-programmatic-scrolling) .button-ghost,
-body:is(.is-scrolling, .is-programmatic-scrolling) .eyebrow {
+body.is-programmatic-scrolling .glass,
+body.is-programmatic-scrolling .nav,
+body.is-programmatic-scrolling .button-ghost,
+body.is-programmatic-scrolling .eyebrow {
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
 }
@@ -2329,11 +2324,11 @@ body.is-programmatic-scrolling .profile-card::after,
 body.is-programmatic-scrolling .profile-glow {
   opacity: 0 !important;
 }
-body:is(.is-scrolling, .is-programmatic-scrolling) .hero-network,
-body:is(.is-scrolling, .is-programmatic-scrolling) .section-art,
-body:is(.is-scrolling, .is-programmatic-scrolling) .data-packet,
-body:is(.is-scrolling, .is-programmatic-scrolling) .workflow-packet,
-body:is(.is-scrolling, .is-programmatic-scrolling) .inference-packet {
+body.is-programmatic-scrolling .hero-network,
+body.is-programmatic-scrolling .section-art,
+body.is-programmatic-scrolling .data-packet,
+body.is-programmatic-scrolling .workflow-packet,
+body.is-programmatic-scrolling .inference-packet {
   filter: none !important;
 }
 
