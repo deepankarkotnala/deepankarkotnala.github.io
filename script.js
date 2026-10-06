@@ -10,7 +10,7 @@
   const navAnchors = [...document.querySelectorAll('.nav-links a[href^="#"]')];
   const internalAnchors = [...document.querySelectorAll('a[href^="#"]')];
   const sections = [...document.querySelectorAll('main section[id]')];
-  const revealItems = [...document.querySelectorAll('.reveal, .skill-card')];
+  const revealItems = [...document.querySelectorAll('.reveal')];
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
   const mobilePerformanceMode = window.matchMedia('(max-width: 900px), (hover: none), (pointer: coarse)');
@@ -190,6 +190,10 @@
   const showAllContent = () => revealItems.forEach(item => item.classList.add('visible'));
   const replayRevealItems = new Set(document.querySelectorAll('.glass.reveal, .timeline-item.reveal, .hero-visual.reveal'));
   let revealObserver = null;
+  // Opening a project can push later cards off screen without any scroll;
+  // resetting them then would replay their rise-in when the project closes.
+  let revealHoldUntil = 0;
+  const holdRevealReplay = () => { revealHoldUntil = performance.now() + 1000; };
 
   if (reducedMotion || !('IntersectionObserver' in window)) {
     showAllContent();
@@ -200,7 +204,7 @@
         if (entry.isIntersecting) {
           item.classList.add('visible');
           if (!replayRevealItems.has(item)) revealObserver?.unobserve(item);
-        } else if (replayRevealItems.has(item)) {
+        } else if (replayRevealItems.has(item) && performance.now() > revealHoldUntil) {
           // Reset only after the card leaves the viewport so the same rise-in
           // transition plays again the next time the user scrolls back to it.
           item.classList.remove('visible');
@@ -211,13 +215,23 @@
   }
 
   const currentHashTarget = window.location.hash ? document.querySelector(window.location.hash) : null;
-  currentHashTarget?.querySelectorAll('.reveal, .skill-card').forEach(item => item.classList.add('visible'));
+  currentHashTarget?.querySelectorAll('.reveal').forEach(item => item.classList.add('visible'));
 
   // Sliding highlight behind the active desktop nav link. The mobile
   // menu is a grid sheet, so there each link keeps its own background.
+  // The pill is built from two fixed-size end caps and a middle strip
+  // that is only ever scaled horizontally, so its length can change
+  // with transforms alone -- no width/layout per frame, and the
+  // rounded ends never distort.
   const navIndicator = document.createElement('span');
   navIndicator.className = 'nav-indicator';
   navIndicator.setAttribute('aria-hidden', 'true');
+  const navPillPieces = ['pill-cap pill-cap-l', 'pill-mid', 'pill-cap pill-cap-r'].map(className => {
+    const piece = document.createElement('span');
+    piece.className = className;
+    navIndicator.append(piece);
+    return piece;
+  });
   menu?.prepend(navIndicator);
 
   // Link boxes only move when the layout does (resize, font load), so
@@ -234,35 +248,155 @@
     }]));
   };
 
-  let navSnapFrame = 0;
+  // Liquid motion: the pill's left and right edges are two independent
+  // springs. The edge facing the destination is stiffer, so it races
+  // ahead and the pill stretches like a droplet, then the trailing edge
+  // catches up and the whole thing settles with a soft wobble.
+  //
+  // The springs are solved up front, not per frame: the whole path is
+  // sampled once and handed to the Web Animations API as transform-only
+  // keyframes, which the compositor plays off the main thread. So the
+  // pill stays fluid even while a nav click's scroll is busy re-laying
+  // out content-visibility sections. Retargeting mid-flight reads the
+  // running animation's position and velocity and solves a new path from
+  // there, so a new destination bends the motion instead of restarting.
+  const LEAD = { stiffness: 1400, damping: 62 };
+  const TRAIL = { stiffness: 760, damping: 48 };
+  const SPRING_STEP = 1 / 480;
+  const STEPS_PER_FRAME = 8; // one keyframe every 1/60 s
+  const FRAME_MS = SPRING_STEP * STEPS_PER_FRAME * 1000;
+  const MID_BASE = 64; // .pill-mid's CSS width, scaled to fit
+  const navPill = {
+    l: 0, r: 0, top: -1, height: 0, targetL: 0, targetR: 0,
+    motion: null // { samples, animations } while a glide is running
+  };
+
+  const solveNavSpring = (start, targetL, targetR) => {
+    // Pick lead and trail once per glide. Re-deciding every frame made
+    // the roles flip whenever the left edge overshot, which jolted the
+    // stiffness and showed up as a wobble.
+    const movingRight = targetL > start.l;
+    const edges = [
+      { x: start.l, v: start.lv, target: targetL, ...(movingRight ? TRAIL : LEAD) },
+      { x: start.r, v: start.rv, target: targetR, ...(movingRight ? LEAD : TRAIL) }
+    ];
+    const samples = [start];
+    for (let frame = 0; frame < 150; frame += 1) {
+      for (let i = 0; i < STEPS_PER_FRAME; i += 1) {
+        edges.forEach(edge => {
+          edge.v += (edge.stiffness * (edge.target - edge.x) - edge.damping * edge.v) * SPRING_STEP;
+          edge.x += edge.v * SPRING_STEP;
+        });
+      }
+      if (edges.every(edge => Math.abs(edge.target - edge.x) < .3 && Math.abs(edge.v) < 6)) break;
+      samples.push({ l: edges[0].x, lv: edges[0].v, r: edges[1].x, rv: edges[1].v });
+    }
+    samples.push({ l: targetL, lv: 0, r: targetR, rv: 0 });
+    return samples;
+  };
+
+  // Transforms for [left cap, middle, right cap] with the pill spanning l..r.
+  const navPillTransforms = (l, r, restWidth) => {
+    const cap = navPill.height / 2;
+    const width = Math.max(0, r - l);
+    // Stretched pills thin out slightly, like a drawn-out drop of water.
+    const stretch = Math.max(0, width / (restWidth || width || 1) - 1);
+    const squash = 1 - Math.min(.16, stretch * .22);
+    // The middle overlaps each cap by 1px so no seam shows between them.
+    const midScale = Math.max(0, width - cap * 2 + 2) / MID_BASE;
+    return [
+      `translate3d(${l}px,0,0) scaleY(${squash})`,
+      `translate3d(${l + cap - 1}px,0,0) scale(${midScale},${squash})`,
+      `translate3d(${r - cap}px,0,0) scaleY(${squash})`
+    ];
+  };
+
+  // Where the pill is right now, read from the running animation.
+  const currentNavPillState = () => {
+    const { motion } = navPill;
+    if (!motion) return { l: navPill.l, lv: 0, r: navPill.r, rv: 0 };
+    const t = Math.max(0, motion.animations[0].currentTime || 0) / FRAME_MS;
+    const i = Math.min(motion.samples.length - 1, Math.floor(t));
+    const a = motion.samples[i];
+    const b = motion.samples[Math.min(motion.samples.length - 1, i + 1)];
+    const f = Math.min(1, t - i);
+    const mix = key => a[key] + (b[key] - a[key]) * f;
+    return { l: mix('l'), lv: mix('lv'), r: mix('r'), rv: mix('rv') };
+  };
+
+  const stopNavPillMotion = () => {
+    navPill.motion?.animations.forEach(animation => animation.cancel());
+    navPill.motion = null;
+  };
+
+  const placeNavPill = transforms => {
+    navPillPieces.forEach((piece, i) => { piece.style.transform = transforms[i]; });
+  };
+
+  const glideNavPill = () => {
+    const start = currentNavPillState();
+    stopNavPillMotion();
+    const { targetL, targetR } = navPill;
+    navPill.l = targetL;
+    navPill.r = targetR;
+    const samples = solveNavSpring(start, targetL, targetR);
+    const restWidth = targetR - targetL;
+    // The resting pose goes inline first, so once the animation ends
+    // (fill: none) the pill simply stays where it landed.
+    placeNavPill(navPillTransforms(targetL, targetR, restWidth));
+    if (samples.length < 3 || !('animate' in navIndicator)) return;
+    const keyframes = navPillPieces.map(() => []);
+    samples.forEach(({ l, r }) => {
+      navPillTransforms(l, r, restWidth).forEach((transform, i) => keyframes[i].push({ transform }));
+    });
+    const duration = (samples.length - 1) * FRAME_MS;
+    const motion = {
+      samples,
+      animations: navPillPieces.map((piece, i) => piece.animate(keyframes[i], { duration, easing: 'linear' }))
+    };
+    motion.animations[0].onfinish = () => {
+      if (navPill.motion === motion) navPill.motion = null;
+    };
+    navPill.motion = motion;
+  };
+
   const moveNavIndicator = ({ animate = true } = {}) => {
     if (!menu) return;
     const active = navAnchors.find(anchor => anchor.classList.contains('active'));
     const enabled = Boolean(active) && window.innerWidth > 900;
     menu.classList.toggle('has-indicator', enabled);
     if (!enabled) {
+      stopNavPillMotion();
       navIndicator.classList.remove('is-visible');
       return;
     }
 
     if (!navLinkBoxes) measureNavLinks();
     const box = navLinkBoxes.get(active);
+    const nextL = box.left;
+    const nextR = box.left + box.width;
+    // Height and vertical offset only change with layout, so they are
+    // written here rather than animated.
+    if (box.top !== navPill.top || box.height !== navPill.height) {
+      navPill.top = box.top;
+      navPill.height = box.height;
+      navIndicator.style.top = `${box.top}px`;
+      navIndicator.style.setProperty('--pill-h', `${box.height}px`);
+    }
 
     // Appearing from hidden (first paint, resize, returning from the
     // mobile layout) should land in place, not slide in from 0,0.
-    // Transitions are restored a frame later instead of by reading
-    // offsetWidth, which would force another layout.
-    const snap = !animate || !navIndicator.classList.contains('is-visible');
+    const snap = !animate || reducedMotion || !navIndicator.classList.contains('is-visible');
     if (snap) {
-      navIndicator.style.transition = 'none';
-      cancelAnimationFrame(navSnapFrame);
-      navSnapFrame = requestAnimationFrame(() => {
-        navSnapFrame = requestAnimationFrame(() => { navIndicator.style.transition = ''; });
-      });
+      stopNavPillMotion();
+      navPill.targetL = navPill.l = nextL;
+      navPill.targetR = navPill.r = nextR;
+      placeNavPill(navPillTransforms(nextL, nextR, nextR - nextL));
+    } else if (nextL !== navPill.targetL || nextR !== navPill.targetR) {
+      navPill.targetL = nextL;
+      navPill.targetR = nextR;
+      glideNavPill();
     }
-    navIndicator.style.width = `${box.width}px`;
-    navIndicator.style.height = `${box.height}px`;
-    navIndicator.style.transform = `translate3d(${box.left}px, ${box.top}px, 0)`;
     navIndicator.classList.add('is-visible');
   };
 
@@ -314,7 +448,11 @@
     if (target === body) return 0;
     const maxY = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
     const offset = Math.ceil(header?.getBoundingClientRect().height || 58) + 18;
-    const y = target.getBoundingClientRect().top + window.scrollY - offset;
+    // Land on the section's content, not its outer edge: `.section`
+    // has 52px of top padding, which otherwise stacked on the offset
+    // above as an empty band under the nav.
+    const paddingTop = parseFloat(getComputedStyle(target).paddingTop) || 0;
+    const y = target.getBoundingClientRect().top + window.scrollY + paddingTop - offset;
     return Math.min(Math.max(0, y), maxY);
   };
 
@@ -508,10 +646,20 @@
     if (geometryFrame) cancelAnimationFrame(geometryFrame);
     geometryFrame = requestAnimationFrame(() => {
       geometryFrame = 0;
-      navLinkBoxes = null;
+      // This also fires while scrolling, whenever a content-visibility
+      // section resolves its real height. Snapping the pill then cut its
+      // glide short mid-flight on long jumps (Home -> Experience), so only
+      // snap when the nav links themselves actually moved.
+      const previousBoxes = navLinkBoxes;
+      measureNavLinks();
+      const linksMoved = !previousBoxes || navAnchors.some(anchor => {
+        const a = previousBoxes.get(anchor);
+        const b = navLinkBoxes.get(anchor);
+        return !a || a.left !== b.left || a.top !== b.top || a.width !== b.width || a.height !== b.height;
+      });
       refreshScrollGeometry();
       updateScrollUI();
-      moveNavIndicator({ animate: false });
+      moveNavIndicator({ animate: !linksMoved });
     });
   };
 
@@ -556,7 +704,7 @@
     try { target = document.querySelector(hash); } catch (_) { return; }
     if (!target) return;
 
-    target.querySelectorAll('.reveal, .skill-card').forEach(item => item.classList.add('visible'));
+    target.querySelectorAll('.reveal').forEach(item => item.classList.add('visible'));
     refreshScrollGeometry();
     // Default behaviour is 'instant' rather than 'auto' for the same
     // reason: 'auto' would inherit html's `scroll-behavior: smooth`,
@@ -619,7 +767,7 @@
 
 
   const staggerGroups = [
-    '.skills-grid .skill-card',
+    '.skills-index li',
     '.tools-grid .tool-group-card',
     '.timeline .timeline-item',
     '.education-grid .education-card',
@@ -777,6 +925,89 @@
     // scrim state mismatched; simplest correct answer is to close.
     window.addEventListener('resize', () => { if (contactOpen) closeContact(); }, { passive: true });
   }
+
+  // Project accordion: each row toggles its own panel; several can be open.
+  // The layout switch is instant (one reflow per click) and the motion is
+  // played with transforms only, which the compositor runs off the main
+  // thread, so it stays smooth on low-end hardware:
+  //  - the panel's clipping box slides from -h while its content
+  //    counter-slides from +h, uncovering the details top-down;
+  //  - everything below the panel starts drawn h px higher and slides
+  //    down into its new place.
+  // Closing plays the same motion in reverse, then collapses the layout.
+  const ACC_OPEN_MS = 240;
+  const ACC_CLOSE_MS = 200;
+  const ACC_EASE = 'cubic-bezier(.25, .8, .3, 1)';
+  let finishAccordion = null;
+
+  // Elements after `el` in document order that can be on screen during a
+  // shift of `h` px. Document order is top-to-bottom here, so the first
+  // one too far down ends the walk; nothing off screen gets promoted.
+  const followingOnScreen = (el, h) => {
+    const found = [];
+    for (let node = el; node && node !== document.body; node = node.parentElement) {
+      for (let sib = node.nextElementSibling; sib; sib = sib.nextElementSibling) {
+        if (getComputedStyle(sib).position === 'fixed') continue;
+        if (sib.getBoundingClientRect().top - h > window.innerHeight) return found;
+        found.push(sib);
+      }
+    }
+    return found;
+  };
+
+  // The browser's scroll anchoring would otherwise nudge the page when a
+  // panel's height snaps, moving the clicked row away from the pointer.
+  // Nothing above the panel changes size, so with anchoring paused for that
+  // one layout the clicked row stays exactly where it was.
+  const withoutScrollAnchoring = change => {
+    root.style.overflowAnchor = 'none';
+    change();
+    requestAnimationFrame(() => requestAnimationFrame(() => { root.style.overflowAnchor = ''; }));
+  };
+
+  const toggleProject = (item, trigger) => {
+    finishAccordion?.();
+    const open = !item.classList.contains('is-open');
+    const close = () => withoutScrollAnchoring(() => item.classList.remove('is-open'));
+    trigger.setAttribute('aria-expanded', String(open));
+    holdRevealReplay();
+    if (open) withoutScrollAnchoring(() => item.classList.add('is-open'));
+
+    const inner = item.querySelector('.acc-panel-inner');
+    const body = item.querySelector('.acc-body');
+    const h = reducedMotion ? 0 : inner.getBoundingClientRect().height;
+    if (!h || !inner.animate) {
+      if (!open) close();
+      return;
+    }
+
+    const timing = { duration: open ? ACC_OPEN_MS : ACC_CLOSE_MS, easing: ACC_EASE, fill: 'both' };
+    const [from, to] = open ? [-h, 0] : [0, -h];
+    const shift = [{ translate: `0 ${from}px` }, { translate: `0 ${to}px` }];
+    const counter = [{ translate: `0 ${-from}px` }, { translate: `0 ${-to}px` }];
+    const anims = [
+      inner.animate(shift, timing),
+      body.animate(counter, timing),
+      ...followingOnScreen(item, h).map(el => el.animate(shift, timing))
+    ];
+
+    let done = false;
+    const finish = () => {
+      if (done) return;
+      done = true;
+      if (finishAccordion === finish) finishAccordion = null;
+      // Collapse and drop the transforms in the same task: no flash.
+      if (!open) close();
+      anims.forEach(anim => anim.cancel());
+    };
+    finishAccordion = finish;
+    anims[0].finished.then(finish, () => {});
+  };
+
+  document.querySelectorAll('.acc-trigger').forEach(trigger => {
+    const item = trigger.closest('.acc-item');
+    trigger.addEventListener('click', () => toggleProject(item, trigger));
+  });
 
   // Keep one subtle tilt interaction on the hero card only.
   // Avoid per-card pointer tracking across all glass panels to reduce main-thread work.
