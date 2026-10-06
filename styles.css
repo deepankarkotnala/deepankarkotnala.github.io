@@ -1,3 +1,24 @@
+/* Inter, self-hosted (variable 300-800, Google Fonts' v20 subsets).
+   Served from the same origin, so there is no third-party DNS/TLS
+   round trip before text can render. latin-ext only downloads if a
+   character in its range actually appears on the page. */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 300 800;
+  font-display: swap;
+  src: url("fonts/inter-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 300 800;
+  font-display: swap;
+  src: url("fonts/inter-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
 :root {
   /* Theme crossfade timing: shared by both themes, so it must live
      in the base :root and not in a [data-theme] block. Asymmetric on
@@ -837,7 +858,10 @@ svg { fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: roun
 .scroll-cue span::before { content: ""; position: absolute; left: 50%; top: 5px; width: 3px; height: 6px; border-radius: 999px; background: var(--accent); transform: translateX(-50%); animation: scrollCue 1.9s ease-in-out infinite; }
 
 .section { position: relative; padding: 52px 0; }
-.section::before { content: ""; position: absolute; width: 300px; height: 300px; border-radius: 50%; background: color-mix(in srgb, var(--accent) 7%, transparent); filter: blur(70px); opacity: .55; pointer-events: none; left: -190px; top: 20%; }
+/* Soft glow drawn as a radial gradient rather than `filter: blur(70px)`
+   on a solid disc: same falloff, but a gradient rasterises in one cheap
+   pass instead of a large Gaussian blur on every section's first paint. */
+.section::before { content: ""; position: absolute; width: 580px; height: 580px; border-radius: 50%; background: radial-gradient(circle closest-side, color-mix(in srgb, var(--accent) 7%, transparent) 0%, color-mix(in srgb, var(--accent) 6%, transparent) 30%, color-mix(in srgb, var(--accent) 3%, transparent) 60%, transparent 100%); opacity: .55; pointer-events: none; left: -330px; top: calc(20% - 140px); }
 .section:nth-of-type(even)::before { left: auto; right: -190px; background: color-mix(in srgb, var(--accent-2) 7%, transparent); }
 #about { padding-top: 42px; }
 .section-tinted { background: linear-gradient(180deg, color-mix(in srgb, var(--bg-soft) 45%, transparent), color-mix(in srgb, var(--bg-soft) 15%, transparent)); border-block: 1px solid var(--section-divider); }
@@ -2002,19 +2026,6 @@ html.motion-pending .scroll-cue span::before {
   animation-play-state: paused !important;
 }
 
-/* Only animate decorative regions while they are near the viewport. */
-.section-art *,
-.hero-visual .orbit,
-.hero-visual .hero-network * {
-  animation-play-state: paused;
-}
-
-.section-art.motion-active *,
-.hero-visual.motion-active .orbit,
-.hero-visual.motion-active .hero-network * {
-  animation-play-state: running;
-}
-
 /* Mobile navigation and scrolling performance */
 html.js-scroll-controlled { scroll-behavior: auto; }
 section[id] { scroll-margin-top: 86px; }
@@ -2292,21 +2303,6 @@ body.is-programmatic-scrolling .status-dot {
   animation: aiNodePulse 2.4s var(--ease-soft) infinite;
 }
 
-/* Final play-state overrides must come after the illustration animation shorthands. */
-:root.motion-gated .section-art:not(.motion-active) *,
-:root.motion-gated .section-art:not(.motion-active)::before,
-:root.motion-gated .section-art:not(.motion-active)::after,
-:root.motion-gated .hero-visual:not(.motion-active) .orbit,
-:root.motion-gated .hero-visual:not(.motion-active) .hero-network * {
-  animation-play-state: paused;
-}
-.section-art.motion-active *,
-.section-art.motion-active::before,
-.section-art.motion-active::after,
-.hero-visual.motion-active .orbit,
-.hero-visual.motion-active .hero-network * {
-  animation-play-state: running;
-}
 
 /* Temporarily flatten costly live blurs during nav-link jumps. */
 body.is-programmatic-scrolling .noise {
@@ -2371,34 +2367,6 @@ body.is-programmatic-scrolling .inference-packet {
   }
 }
 
-/* Motion-path animations (`offset-path`) are not GPU-accelerated in
-   Chromium; each one drives main-thread work every frame. Pause the
-   decorative packet travellers unless their zone is actually onscreen,
-   which the .motion-active IntersectionObserver in script.js toggles. */
-:root.motion-gated .section-art:not(.motion-active) .data-packet,
-:root.motion-gated .section-art:not(.motion-active) .workflow-packet,
-:root.motion-gated .section-art:not(.motion-active) .inference-packet,
-:root.motion-gated .section-art:not(.motion-active) .packet-a,
-:root.motion-gated .section-art:not(.motion-active) .packet-b,
-:root.motion-gated .section-art:not(.motion-active) .svg-traveller,
-:root.motion-gated .hero-visual:not(.motion-active) .data-packet,
-:root.motion-gated .hero-visual:not(.motion-active) .svg-traveller {
-  animation-play-state: paused;
-}
-
-/* Offscreen SVG decoration should not animate at all. The observer in
-   script.js only tracks .hero-visual and .section-art, so gate the
-   per-node pulses and dash flows on the same signal. */
-:root.motion-gated .section-art:not(.motion-active) :is(
-  .svg-dash, .svg-pulse, .svg-orbit, .svg-scan, .svg-bob, .svg-star,
-  .neural-links path, .neural-nodes circle, .attention-nodes circle,
-  .agent-node circle, .chip-lines, .scan-line, .workflow-path,
-  .inference-path, .learning-loop, .agent-core, .brain-path,
-  .badge-ring, .check-path, .verification-orbit
-) {
-  animation-play-state: paused;
-}
-
 /* Skip rendering work for below-the-fold sections entirely until they
    approach the viewport. contain-intrinsic-size keeps the scrollbar
    and the scroll-progress geometry stable while they are skipped. */
@@ -2413,12 +2381,30 @@ main > section:target {
   content-visibility: visible;
 }
 
-/* Same gate for the hero: its dash flow, node pulses and the two CSS
-   orbit rings keep animating otherwise, and the hero is the one zone
-   guaranteed to be onscreen at load. */
-:root.motion-gated .hero-visual:not(.motion-active) :is(
-  .svg-dash, .svg-pulse, .hero-network path, .hero-network circle
-),
-:root.motion-gated .hero-visual:not(.motion-active) .orbit {
-  animation-play-state: paused;
+/* ============================================================
+   Static illustrations
+   ============================================================
+   The hero network and section diagrams are drawn as still images.
+   Their former loops animated stroke-dashoffset, offset-path motion,
+   SVG-internal transforms, box-shadow and drop-shadow -- none of which
+   Chromium can composite, so each one repainted on the main thread
+   every frame and competed with scrolling on Windows. */
+.hero-network *,
+.section-art *,
+.section-art::before,
+.section-art::after,
+.contact-signal *,
+.status-dot,
+.role-status-dot {
+  animation: none !important;
 }
+/* Pieces that only make sense in motion. */
+.data-packet,
+.workflow-packet,
+.inference-packet,
+.svg-traveller,
+.scan-line {
+  display: none;
+}
+/* The check mark was drawn in by its animation; show it fully drawn. */
+.check-path { stroke-dashoffset: 0; }

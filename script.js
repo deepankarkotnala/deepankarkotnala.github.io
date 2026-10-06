@@ -210,20 +210,6 @@
     revealItems.forEach(item => revealObserver.observe(item));
   }
 
-  const motionZones = [...document.querySelectorAll('.hero-visual, .section-art')];
-  if (!reducedMotion && !mobilePerformanceMode.matches && 'IntersectionObserver' in window) {
-    // Flag that the observer is live. The CSS pause rules key off this class,
-    // so decorative motion is only ever gated when something is actually
-    // toggling .motion-active -- otherwise (mobile perf mode, reduced motion,
-    // no IntersectionObserver) the animations must be left to run untouched
-    // rather than paused forever.
-    root.classList.add('motion-gated');
-    const motionObserver = new IntersectionObserver(entries => {
-      entries.forEach(entry => entry.target.classList.toggle('motion-active', entry.isIntersecting));
-    }, { threshold: 0.01, rootMargin: '120px 0px' });
-    motionZones.forEach(zone => motionObserver.observe(zone));
-  }
-
   const currentHashTarget = window.location.hash ? document.querySelector(window.location.hash) : null;
   currentHashTarget?.querySelectorAll('.reveal, .skill-card').forEach(item => item.classList.add('visible'));
 
@@ -234,6 +220,21 @@
   navIndicator.setAttribute('aria-hidden', 'true');
   menu?.prepend(navIndicator);
 
+  // Link boxes only move when the layout does (resize, font load), so
+  // measure them then rather than on every active-section change --
+  // reading offset* right after toggling .active forced a synchronous
+  // style + layout pass in the middle of scrolling.
+  let navLinkBoxes = null;
+  const measureNavLinks = () => {
+    navLinkBoxes = new Map(navAnchors.map(anchor => [anchor, {
+      left: anchor.offsetLeft,
+      top: anchor.offsetTop,
+      width: anchor.offsetWidth,
+      height: anchor.offsetHeight
+    }]));
+  };
+
+  let navSnapFrame = 0;
   const moveNavIndicator = ({ animate = true } = {}) => {
     if (!menu) return;
     const active = navAnchors.find(anchor => anchor.classList.contains('active'));
@@ -244,17 +245,24 @@
       return;
     }
 
+    if (!navLinkBoxes) measureNavLinks();
+    const box = navLinkBoxes.get(active);
+
     // Appearing from hidden (first paint, resize, returning from the
     // mobile layout) should land in place, not slide in from 0,0.
+    // Transitions are restored a frame later instead of by reading
+    // offsetWidth, which would force another layout.
     const snap = !animate || !navIndicator.classList.contains('is-visible');
-    if (snap) navIndicator.style.transition = 'none';
-    navIndicator.style.width = `${active.offsetWidth}px`;
-    navIndicator.style.height = `${active.offsetHeight}px`;
-    navIndicator.style.transform = `translate3d(${active.offsetLeft}px, ${active.offsetTop}px, 0)`;
     if (snap) {
-      void navIndicator.offsetWidth;
-      navIndicator.style.transition = '';
+      navIndicator.style.transition = 'none';
+      cancelAnimationFrame(navSnapFrame);
+      navSnapFrame = requestAnimationFrame(() => {
+        navSnapFrame = requestAnimationFrame(() => { navIndicator.style.transition = ''; });
+      });
     }
+    navIndicator.style.width = `${box.width}px`;
+    navIndicator.style.height = `${box.height}px`;
+    navIndicator.style.transform = `translate3d(${box.left}px, ${box.top}px, 0)`;
     navIndicator.classList.add('is-visible');
   };
 
@@ -500,6 +508,7 @@
     if (geometryFrame) cancelAnimationFrame(geometryFrame);
     geometryFrame = requestAnimationFrame(() => {
       geometryFrame = 0;
+      navLinkBoxes = null;
       refreshScrollGeometry();
       updateScrollUI();
       moveNavIndicator({ animate: false });
