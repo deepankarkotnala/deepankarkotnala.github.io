@@ -115,6 +115,10 @@
                 <span>AI Agents</span>
               </span>
               <span class="tag-pill">
+                <svg class="pill-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="6" cy="6" r="3"/><circle cx="18" cy="6" r="3"/><circle cx="12" cy="18" r="3"/><path d="M8.5 6h7M7.5 8.5l3 6.5M16.5 8.5l-3 6.5"/></svg>
+                <span>A2A / Multi-Agent</span>
+              </span>
+              <span class="tag-pill">
                 <svg class="pill-icon" viewBox="0 0 24 24" aria-hidden="true"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
                 <span>Python</span>
               </span>
@@ -182,8 +186,8 @@
 
         <ol class="skills-index">
           <li class="glass reveal"><span class="skill-num" aria-hidden="true">01</span><h3>AI Agent Engineering</h3><p>Autonomous agents that plan, call tools and recover from failure.</p></li>
-          <li class="glass reveal"><span class="skill-num" aria-hidden="true">02</span><h3>Multi-Agent Systems &amp; Workflow Orchestration</h3><p>Coordinated agent graphs with shared state, handoffs and retries.</p></li>
-          <li class="glass reveal"><span class="skill-num" aria-hidden="true">03</span><h3>Tool Calling, MCP &amp; Enterprise Integrations</h3><p>Connecting models to internal systems through MCP and function calling.</p></li>
+          <li class="glass reveal"><span class="skill-num" aria-hidden="true">02</span><h3>Multi-Agent Systems &amp; Workflow Orchestration</h3><p>Coordinated agent graphs and agent-to-agent (A2A) interoperability with shared state, handoffs and retries.</p></li>
+          <li class="glass reveal"><span class="skill-num" aria-hidden="true">03</span><h3>Tool Calling, MCP, A2A &amp; Enterprise Integrations</h3><p>Connecting models to internal systems through MCP and function calling.</p></li>
           <li class="glass reveal"><span class="skill-num" aria-hidden="true">04</span><h3>Context Engineering</h3><p>Shaping what the model sees: memory, retrieval and prompt structure.</p></li>
           <li class="glass reveal"><span class="skill-num" aria-hidden="true">05</span><h3>LLM Application Development</h3><p>End-to-end LLM features, from prompt design to shipped product.</p></li>
           <li class="glass reveal"><span class="skill-num" aria-hidden="true">06</span><h3>Enterprise RAG Architecture</h3><p>Retrieval over enterprise data with citations and access control.</p></li>
@@ -217,6 +221,8 @@
               <span class="tool-tag">LangChain</span>
               <span class="tool-tag">Google ADK</span>
               <span class="tool-tag">Model Context Protocol (MCP)</span>
+              <span class="tool-tag">Agent2Agent (A2A) Protocol</span>
+              <span class="tool-tag">OpenAI Responses API</span>
               <span class="tool-tag">Multi-Agent Systems</span>
               <span class="tool-tag">Context Engineering</span>
             </div>
@@ -259,6 +265,8 @@
               <span class="tool-tag">NVIDIA DGX &amp; Jetson</span>
               <span class="tool-tag">CUDA &amp; GPU Workflows</span>
               <span class="tool-tag">Docker Compose</span>
+              <span class="tool-tag">Kubernetes</span>
+              <span class="tool-tag">AWS (ECR)</span>
             </div>
           </article>
 
@@ -307,15 +315,14 @@
                 </div>
               </header>
               <div class="project-accordion">
-                <div class="acc-item is-open">
+                <div class="acc-item">
                   <h4 class="acc-heading">
-                    <button class="acc-trigger" type="button" id="tcg-project-1" aria-expanded="true" aria-controls="tcg-project-1-panel">
+                    <button class="acc-trigger" type="button" id="tcg-project-1" aria-expanded="false" aria-controls="tcg-project-1-panel">
                       <span class="acc-dot" aria-hidden="true"></span>
                       <span class="acc-title">
-                        <span class="acc-name">Energy &amp; Material Agentic Exploration &amp; Diagnosis Platform <span class="acc-tag">Multi-Agent AI</span></span>
-                        <span class="acc-summary">Agentic platform that investigates plant process anomalies and writes evidence-grounded diagnostic reports.</span>
+                        <span class="acc-name">Energy &amp; Material Agentic Exploration &amp; Diagnosis Platform <span class="acc-tag">Agentic AI · A2A</span></span>
+                        <span class="acc-summary">Agentic platform that diagnoses plant process anomalies and works with other agents over A2A.</span>
                       </span>
-                      <span class="acc-metric"><strong>800+</strong> automated tests</span>
                       <svg class="acc-chevron" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 8 5 5 5-5"/></svg>
                     </button>
                   </h4>
@@ -323,11 +330,12 @@
                     <div class="acc-panel-inner">
                       <div class="acc-body">
                         <ul>
-                          <li>Built an <strong>agentic AI platform</strong> that combines P&amp;ID drawings, plant historian data and engineering documents to investigate process anomalies and generate <strong>evidence-grounded diagnostic reports</strong>.</li>
-                          <li>Designed multi-stage agents for planning, exploration, diagnosis and reporting using <strong>Google ADK</strong>, Gemini/OpenAI, <strong>FastAPI</strong> and <strong>Elasticsearch</strong>, with the LLM steering the investigation and <strong>deterministic Python analytics</strong> doing all the numbers.</li>
-                          <li>Added production guardrails: engineer approval checkpoints, numerical grounding validation, immutable evidence, scoped tool execution and model/tool-call limits, backed by <strong>800+ automated tests</strong>.</li>
+                          <li>Built an agentic platform that reads P&amp;ID drawings and plant historian data to find and diagnose process anomalies.</li>
+                          <li>Integrated it with an enterprise multi-agent platform using the <strong>A2A protocol</strong>, with streaming, task tracking and auth.</li>
+                          <li>Designed planning, exploration and diagnosis agents with Google ADK and OpenAI. The LLM guides the analysis; Python computes every number.</li>
+                          <li>Added guardrails such as engineer approvals and number checks. Deployed on <strong>Kubernetes (AWS)</strong>.</li>
                         </ul>
-                        <div class="acc-stack"><span>Google ADK</span><span>Gemini</span><span>OpenAI</span><span>FastAPI</span><span>Elasticsearch</span><span>Python</span></div>
+                        <div class="acc-stack"><span>A2A Protocol</span><span>Google ADK</span><span>OpenAI</span><span>FastAPI</span><span>Elasticsearch</span><span>Kubernetes</span><span>AWS</span></div>
                       </div>
                     </div>
                   </div>
@@ -341,7 +349,6 @@
                         <span class="acc-name">Oil &amp; Gas Plant Digital Twin <span class="acc-tag">Digitization Project</span></span>
                         <span class="acc-summary">Python backend and application architecture for a digital twin that simulates and optimizes an oil &amp; gas plant.</span>
                       </span>
-                      <span class="acc-metric"><strong>6</strong> person team</span>
                       <svg class="acc-chevron" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 8 5 5 5-5"/></svg>
                     </button>
                   </h4>
@@ -367,7 +374,6 @@
                         <span class="acc-name">Real-Time Optimization <span class="acc-tag">Machine Learning</span></span>
                         <span class="acc-summary">Faster optimization runs and automated reporting across multiple plant data sources.</span>
                       </span>
-                      <span class="acc-metric"><strong>90%</strong> shorter runtime</span>
                       <svg class="acc-chevron" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 8 5 5 5-5"/></svg>
                     </button>
                   </h4>

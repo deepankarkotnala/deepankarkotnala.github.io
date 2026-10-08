@@ -939,6 +939,9 @@
   const ACC_CLOSE_MS = 200;
   const ACC_EASE = 'cubic-bezier(.25, .8, .3, 1)';
   let finishAccordion = null;
+  // Re-place the hover highlight after a row's layout or corners change.
+  const glideSyncs = [];
+  const syncGlides = () => glideSyncs.forEach(sync => sync());
 
   // Elements after `el` in document order that can be on screen during a
   // shift of `h` px. Document order is top-to-bottom here, so the first
@@ -972,10 +975,14 @@
     trigger.setAttribute('aria-expanded', String(open));
     holdRevealReplay();
     if (open) withoutScrollAnchoring(() => item.classList.add('is-open'));
+    // Resize the hover highlight now, alongside the open/close motion.
+    syncGlides();
 
     const inner = item.querySelector('.acc-panel-inner');
     const body = item.querySelector('.acc-body');
-    const h = reducedMotion ? 0 : inner.getBoundingClientRect().height;
+    // offsetHeight is in layout px, matching the translate below even
+    // when the page is zoomed (getBoundingClientRect would be scaled).
+    const h = reducedMotion ? 0 : inner.offsetHeight;
     if (!h || !inner.animate) {
       if (!open) close();
       return;
@@ -1008,6 +1015,64 @@
     const item = trigger.closest('.acc-item');
     trigger.addEventListener('click', () => toggleProject(item, trigger));
   });
+
+  // Project hover highlight: one band per accordion glides to whichever
+  // project is under the mouse and covers all of it, title row and open
+  // details alike, while that project's own tints step aside
+  // (.is-hovered) so it reads as one even colour. It is prepended so the
+  // rows paint over it and the open/close motion, which shifts only later
+  // siblings, leaves it alone.
+  if (finePointer) {
+    document.querySelectorAll('.project-accordion').forEach(accordion => {
+      const glide = document.createElement('span');
+      glide.className = 'acc-glide';
+      glide.setAttribute('aria-hidden', 'true');
+      accordion.prepend(glide);
+      accordion.classList.add('has-glide');
+      let current = null;
+
+      // offset* values ignore transforms, so this is the project's settled
+      // box even while the open/close motion is playing. aria-expanded
+      // flips on click, so a closing project shrinks the band at once.
+      const place = () => {
+        const trigger = current.querySelector('.acc-trigger');
+        const body = current.querySelector('.acc-body');
+        const bottom = trigger.getAttribute('aria-expanded') === 'true'
+          ? body.offsetTop + body.offsetHeight
+          : trigger.offsetTop + trigger.offsetHeight;
+        glide.style.transform = `translate(${current.offsetLeft + trigger.offsetLeft}px, ${current.offsetTop + trigger.offsetTop}px)`;
+        glide.style.width = `${trigger.offsetWidth}px`;
+        glide.style.height = `${bottom - trigger.offsetTop}px`;
+      };
+      const hide = () => {
+        current?.classList.remove('is-hovered');
+        current = null;
+        glide.classList.remove('is-visible');
+      };
+
+      accordion.addEventListener('pointerover', event => {
+        if (event.pointerType !== 'mouse') return;
+        const item = event.target.closest('.acc-item');
+        if (!item) return hide();
+        if (item === current) return;
+        // Arriving from outside: appear in place rather than slide in.
+        const arriving = !current;
+        current?.classList.remove('is-hovered');
+        current = item;
+        item.classList.add('is-hovered');
+        if (arriving) glide.style.transition = 'none';
+        place();
+        if (arriving) {
+          void glide.offsetWidth;
+          glide.style.transition = '';
+        }
+        glide.classList.add('is-visible');
+      });
+      accordion.addEventListener('pointerleave', hide);
+      glideSyncs.push(() => { if (current) place(); });
+    });
+    window.addEventListener('resize', syncGlides, { passive: true });
+  }
 
   // Keep one subtle tilt interaction on the hero card only.
   // Avoid per-card pointer tracking across all glass panels to reduce main-thread work.
