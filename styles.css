@@ -31,8 +31,8 @@
   --radius-md: 15px;
   --radius-sm: 11px;
   --shell: min(1240px, calc(100% - 48px));
-  /* Global UI density. Desktop screens get a slightly denser layout so
-     the page doesn't feel zoomed in on large monitors; phones and
+  /* Global UI density. Desktop screens render at 80% (like browser zoom
+     at 80%) so the page doesn't feel oversized; phones and
      tablets stay at 1. Applied with `zoom` below so px, rem and clamp()
      sizes all scale together. */
   --ui-scale: 1;
@@ -177,10 +177,9 @@ html {
 /* Density steps by viewport width (the media queries see the real
    viewport, so they are unaffected by the zoom itself). Wider screens
    also get a wider shell so the denser layout uses the extra room. */
-@media (min-width: 1200px) { :root { --ui-scale: .94; } }
-@media (min-width: 1440px) { :root { --ui-scale: .9; } }
-@media (min-width: 1920px) { :root { --ui-scale: .86; --shell: min(1360px, calc(100% - 48px)); } }
-@media (min-width: 2400px) { :root { --ui-scale: .84; --shell: min(1440px, calc(100% - 48px)); } }
+@media (min-width: 1200px) { :root { --ui-scale: .8; } }
+@media (min-width: 1920px) { :root { --shell: min(1360px, calc(100% - 48px)); } }
+@media (min-width: 2400px) { :root { --shell: min(1440px, calc(100% - 48px)); } }
 /* ============================================================
    Theme transition
    ============================================================
@@ -1231,7 +1230,13 @@ svg { fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: roun
 /* The panel shares the trigger's 10px bleed so the two line up as one
    card; the bleed sits on .acc-panel because .acc-panel-inner clips. */
 .acc-panel { display: grid; grid-template-rows: 1fr; margin: 0 -10px; }
-.acc-panel-inner { min-height: 0; overflow: hidden; }
+.acc-panel-inner { min-height: 0; }
+/* Clip only while collapsed or moving. A clip left on an open panel let
+   Chrome keep the culled paint from mid-motion, when the details sat
+   outside it, so fast open/close left the panel blank until a zoom
+   forced a repaint. Dropping the clip when the motion ends repaints. */
+html.js .acc-item:not(.is-open) .acc-panel-inner,
+.acc-item.is-moving .acc-panel-inner { overflow: hidden; }
 .acc-body {
   display: grid;
   gap: 14px;
@@ -2377,7 +2382,6 @@ main > section:first-of-type,
 main > section:target {
   content-visibility: visible;
 }
-
 /* Status dots hold still: their box-shadow pulse repainted on the
    main thread every frame and competed with scrolling on Windows. */
 .status-dot,

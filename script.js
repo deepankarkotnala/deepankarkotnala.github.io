@@ -988,6 +988,8 @@
       return;
     }
 
+    // Clip the panel only for the motion (see .is-moving in styles.css).
+    item.classList.add('is-moving');
     const timing = { duration: open ? ACC_OPEN_MS : ACC_CLOSE_MS, easing: ACC_EASE, fill: 'both' };
     const [from, to] = open ? [-h, 0] : [0, -h];
     const shift = [{ translate: `0 ${from}px` }, { translate: `0 ${to}px` }];
@@ -1005,6 +1007,7 @@
       if (finishAccordion === finish) finishAccordion = null;
       // Collapse and drop the transforms in the same task: no flash.
       if (!open) close();
+      item.classList.remove('is-moving');
       anims.forEach(anim => anim.cancel());
     };
     finishAccordion = finish;
