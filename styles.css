@@ -31,10 +31,11 @@
   --radius-md: 15px;
   --radius-sm: 11px;
   --shell: min(1240px, calc(100% - 48px));
-  /* Global UI density. Desktop screens render at 80% (like browser zoom
-     at 80%) so the page doesn't feel oversized; phones and
-     tablets stay at 1. Applied with `zoom` below so px, rem and clamp()
-     sizes all scale together. */
+  /* Global UI density. Desktop screens render at 88% (like browser zoom
+     at 88%) so the page doesn't feel oversized, and mouse/trackpad
+     screens narrower than 1366px shrink further in proportion; phones
+     and tablets stay at 1. Applied with `zoom` below so px, rem and
+     clamp() sizes all scale together. */
   --ui-scale: 1;
   --ease: cubic-bezier(.22, 1, .36, 1);
   --ease-soft: cubic-bezier(.2, .8, .2, 1);
@@ -177,7 +178,17 @@ html {
 /* Density steps by viewport width (the media queries see the real
    viewport, so they are unaffected by the zoom itself). Wider screens
    also get a wider shell so the denser layout uses the extra room. */
-@media (min-width: 1200px) { :root { --ui-scale: .8; } }
+@media (min-width: 1200px) { :root { --ui-scale: .88; } }
+/* Mouse/trackpad screens: below 1366px, shrink in proportion to the
+   viewport instead of jumping back to 1 under 1200px. The layout then
+   keeps the same shape at every desktop width; e.g. a 1366x768 screen
+   at 125% OS scaling (1093px viewport) renders exactly as it does at
+   100%. tan(atan2(a, b)) is the CSS idiom for the unitless ratio a / b.
+   The .704 floor keeps text readable in narrow windows; at 900px and
+   below the tablet layout takes over. */
+@media (min-width: 901px) and (hover: hover) and (pointer: fine) {
+  :root { --ui-scale: clamp(.704, .88 * tan(atan2(100vw, 1366px)), .88); }
+}
 @media (min-width: 1920px) { :root { --shell: min(1360px, calc(100% - 48px)); } }
 @media (min-width: 2400px) { :root { --shell: min(1440px, calc(100% - 48px)); } }
 /* ============================================================
@@ -1617,7 +1628,10 @@ html.js .acc-item:not(.is-open) .acc-panel {
 @keyframes statusPulse { 50% { box-shadow: 0 0 0 7px rgba(41,168,121,0); } }
 @keyframes scrollCue { 0%,100% { transform: translate(-50%,0); opacity: .4; } 50% { transform: translate(-50%,8px); opacity: 1; } }
 
-@media (max-width: 1040px) {
+/* Mouse/trackpad screens from 901px to 1040px are zoomed out to a full
+   desktop-width layout (see --ui-scale), so this only applies to touch
+   there; at 900px and below it applies to everything, as before. */
+@media (max-width: 900px), (max-width: 1040px) and (not ((hover: hover) and (pointer: fine))) {
   :root { --shell: min(calc(100% - 34px), 980px); }
   .nav-links a { padding-inline: 6px; font-size: var(--text-xs); }
   .hero-grid { grid-template-columns: minmax(0,1.1fr) minmax(280px,.9fr); gap: 34px; }
